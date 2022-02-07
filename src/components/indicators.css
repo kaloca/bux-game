@@ -1,0 +1,32 @@
+.Container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 40vw;
+    height: 7vh;
+}
+
+.progress {
+    max-width: 10px;
+}
+
+.indicatorText{
+    color: white;
+    font-size: 3vh;
+    font-weight: bold;
+}
+
+.indicatorDiv {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.indicatorIcon {
+    color: white;
+    height: 3vh;
+    width: 3vh;
+    margin-right: 10px;
+}

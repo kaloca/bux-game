@@ -1,0 +1,33 @@
+.questionsContainer {
+    display: flex;
+    flex-direction: column;
+   /* // justify-content: center; */
+    align-items: center;
+
+}
+
+.button {
+    /* width: 10%; */
+    height: 5vh;
+}
+
+.buttonContainer {
+    height: 22vh;
+    min-width: 20vw;
+    display:flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.header {
+    margin-top: 20vh;
+    font-size: 3vh;
+    color: white;
+    margin-bottom: 5vh;
+    max-width: 40vw;
+}
+
+.questionContainer {
+    width: 30vw;
+    margin-top: 7vh;
+}
