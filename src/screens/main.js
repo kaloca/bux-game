@@ -14,19 +14,19 @@ function MainScreen() {
 	const setIndicator = (indicator, value) => {
 		switch (indicator) {
 			case 'health':
-				setHealth(health + value)
-				if (health >= 100) setHealth(100)
+				if (health + value >= 100) setHealth(100)
+				else setHealth(health + value)
 				break
 			case 'education':
-				setEducation(education + value)
-				if (education >= 100) setEducation(100)
+				if (education + value >= 100) setEducation(100)
+				else setEducation(education + value)
 				break
 			case 'money':
 				setMoney(money + value)
 				break
 			case 'friends':
-				setFriends(friends + value)
-				if (friends >= 100) setFriends(100)
+				if (friends + value >= 100) setFriends(100)
+				else setFriends(friends + value)
 				break
 			default:
 				break
@@ -188,11 +188,11 @@ function MainScreen() {
 		{
 			id: '6',
 			questionText:
-				'Parabéns, você se graduou na escola e já fez o vestibular.',
+				'Parabéns, você se graduou na escola e já fez o vestibular. O que quer fazer de faculdade?',
 			option1: {
-				text: 'Contratar um cursinho',
+				text: 'Universidade Federal',
 				consequence: () => {
-					if ((money) => 1000) {
+					if (education >= 95) {
 						setIndicator('money', -1000)
 						setIndicator('friends', 3)
 						setIndicator('health', -2)
@@ -218,6 +218,14 @@ function MainScreen() {
 					setCurrentQuestion('6')
 				},
 			},
+			option4: {
+				text: 'Não fazer faculdade',
+				consequence: () => {
+					setIndicator('friends', 10)
+					setIndicator('health', 8)
+					setCurrentQuestion('6')
+				},
+			},
 		},
 	]
 
@@ -227,6 +235,19 @@ function MainScreen() {
 		}
 
 		const question = questions.find((q) => q.id == id)
+
+		if (question.option4 !== undefined) {
+			return (
+				<Question
+					question={question.questionText}
+					option1={question.option1}
+					option2={question.option2}
+					option3={question.option3}
+					fourthQuestion
+					option4={question.option4}
+				/>
+			)
+		}
 
 		return (
 			<Question
