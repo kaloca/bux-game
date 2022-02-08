@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import Question from '../components/questions'
 import Indicators from 'components/indicators'
 import MemoryGame from '../minigames/memory/App'
+import ClickGame from '../minigames/clickgame/ClickGame'
 import './main.css'
 
 function MainScreen() {
@@ -190,40 +191,117 @@ function MainScreen() {
 			questionText:
 				'Parabéns, você se graduou na escola e já fez o vestibular. O que quer fazer de faculdade?',
 			option1: {
-				text: 'Universidade Federal',
+				text: 'Universidade Federal (★★★★★)',
 				consequence: () => {
 					if (education >= 95) {
-						setIndicator('money', -1000)
-						setIndicator('friends', 3)
-						setIndicator('health', -2)
-						setIndicator('education', 10)
-						setCurrentQuestion('6')
+						setCurrentQuestion('clickgame')
 					}
 				},
 			},
 			option2: {
-				text: 'Dedicar 3 horas diárias para estudar em casa',
+				text: 'Universidade Particular (★★★★)',
 				consequence: () => {
-					setIndicator('education', 10)
-					setIndicator('health', -10)
-					setIndicator('friends', 5)
-					setCurrentQuestion('6')
+					setIndicator('money', -20000)
+					setCurrentQuestion('clickgame')
 				},
 			},
 			option3: {
-				text: 'Não estudar',
+				text: 'Faculdade Pública (★★★)',
 				consequence: () => {
-					setIndicator('friends', 10)
-					setIndicator('health', 8)
-					setCurrentQuestion('6')
+					setCurrentQuestion('clickgame')
 				},
 			},
 			option4: {
-				text: 'Não fazer faculdade',
+				text: 'Não fazer faculdade (★)',
 				consequence: () => {
+					setCurrentQuestion('7')
+				},
+			},
+		},
+		{
+			id: '7',
+			questionText:
+				'Agora que está entrando na faculdade, poderá escolher onde morar.',
+			option1: {
+				text: 'Continuar morando com seus pais',
+				consequence: () => {
+					setIndicator('health', -10)
+					setIndicator('friends', -5)
+					setCurrentQuestion('8')
+				},
+			},
+			option2: {
+				text: 'Alugar um apartamento com seus amigos ($1000 até o fim da faculdade)',
+				consequence: () => {
+					setIndicator('money', -1000)
+					setIndicator('health', 10)
 					setIndicator('friends', 10)
-					setIndicator('health', 8)
-					setCurrentQuestion('6')
+					setCurrentQuestion('8')
+				},
+			},
+			option3: {
+				text: 'Alugar um apartamento sozinho próximo a faculdade ($3000)',
+				consequence: () => {
+					setIndicator('money', -3000)
+					setIndicator('health', 20)
+					setIndicator('education', 5)
+					setIndicator('friends', 5)
+					setCurrentQuestion('8')
+				},
+			},
+		},
+		{
+			id: '8',
+			questionText:
+				'Qual meio de transporte você vai querer utilizar para ir estudar?',
+			option1: {
+				text: 'Comprar um carro. ($3000)',
+				consequence: () => {
+					setIndicator('money', -3000)
+					setIndicator('health', 10)
+					setCurrentQuestion('9')
+				},
+			},
+			option2: {
+				text: 'Ir de metrô ($200 até o fim da faculdade)',
+				consequence: () => {
+					setIndicator('money', -200)
+					setIndicator('health', -8)
+					setCurrentQuestion('9')
+				},
+			},
+			option3: {
+				text: 'Bicicleta ($0)',
+				consequence: () => {
+					setHealth('health', 4)
+					setCurrentQuestion('9')
+				},
+			},
+		},
+		{
+			id: '9',
+			questionText: 'Está na hora de decidir o que você vai cursar.',
+			option1: {
+				text: 'Comprar um carro. ($3000)',
+				consequence: () => {
+					setIndicator('money', -3000)
+					setIndicator('health', 10)
+					setCurrentQuestion('8')
+				},
+			},
+			option2: {
+				text: 'Ir de metrô ($200 até o fim da faculdade)',
+				consequence: () => {
+					setIndicator('money', -200)
+					setIndicator('health', -8)
+					setCurrentQuestion('8')
+				},
+			},
+			option3: {
+				text: 'Bicicleta ($0)',
+				consequence: () => {
+					setHealth('health', 4)
+					setCurrentQuestion('8')
 				},
 			},
 		},
@@ -232,6 +310,10 @@ function MainScreen() {
 	const createQuestionWithId = (id) => {
 		if (id === 'memorygame') {
 			return <MemoryGame moveAhead={() => setCurrentQuestion('5')} />
+		}
+
+		if (id === 'clickgame') {
+			return <ClickGame moveAhead={() => setCurrentQuestion('7')} />
 		}
 
 		const question = questions.find((q) => q.id == id)
