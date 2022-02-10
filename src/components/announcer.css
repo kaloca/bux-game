@@ -1,0 +1,15 @@
+.announcerContainer {
+    display: flex;
+    flex-direction: column;
+   /* // justify-content: center; */
+    align-items: center;
+    margin-top: 14vh;
+}
+
+.announcerHeader {
+    margin-top: 20vh;
+    font-size: 4vh;
+    color: white;
+    margin-bottom: 5vh;
+    max-width: 40vw;
+}
