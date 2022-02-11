@@ -11,7 +11,7 @@ function MainScreen() {
 	const [education, setEducation] = useState(60)
 	const [money, setMoney] = useState(1000)
 	const [friends, setFriends] = useState(50)
-	const [currentQuestion, setCurrentQuestion] = useState('1')
+	const [currentQuestion, setCurrentQuestion] = useState('titlescreen')
 	const [isInClub, setIsInClub] = useState(false)
 
 	const doWithProbability = (n) => {
@@ -41,6 +41,28 @@ function MainScreen() {
 	}
 
 	const questions = [
+		{
+			id: 'titlescreen',
+			questionText: 'BuxLife',
+			consequence: () => setCurrentQuestion('estagioA'),
+			isTitle: true,
+			isAnnouncer: true,
+			buttonText: 'Começar',
+		},
+		{
+			id: 'somethingwrong',
+			questionText:
+				'Infelizmente, você foi atropelado por um ônibus e morreu. Quer recomeçar o jogo?',
+			consequence: () => {
+				setHealth(80)
+				setEducation(60)
+				setMoney(1000)
+				setFriends(50)
+				setCurrentQuestion('titlescreen')
+			},
+			isAnnouncer: true,
+			buttonText: 'Recomeçar',
+		},
 		{
 			id: '1',
 			questionText:
@@ -348,7 +370,7 @@ function MainScreen() {
 			},
 		},
 		{
-			id: '10',
+			id: '11',
 			questionText:
 				'Seu amigo te chamou para entrar no exclusivo clube de empreendedorismo. O que vai fazer?',
 			option1: {
@@ -714,32 +736,187 @@ function MainScreen() {
 			isAnnouncer: true,
 		},
 		{
-			id: 'empre1go1-2',
+			id: 'emprego1-2',
 			questionText:
-				'É a primeira semana de trabalho. Você ainda tem um relatório para terminar, mas o pessoal do escritório te chama pra sair mais cedo e jantar. O que vai fazer?',
+				'Amanhã terá uma reunião importante no trabalho, e você vai fazer uma apresentação. Como quer gastar sua noite?',
 			option1: {
-				text: 'Ficar no escritório e terminar o relatório',
+				text: 'Ficar em casa e se preparar',
 				consequence: () => {
-					setIndicator('friends', -5)
-					setIndicator('health', -10)
-					setCurrentQuestion('emprego1-2')
+					setIndicator('health', -5)
+					setIndicator('education', 2)
+					setCurrentQuestion('emprego1-2-1')
 				},
 			},
 			option2: {
-				text: 'Falar com seu chefe e pedir mais tempo',
+				text: 'Jogar videogame a noite inteira e tentar a sorte',
 				consequence: () => {
-					setIndicator('friends', 3)
-					doWithProbability(0.9)
-						? setCurrentQuestion('emprego1-1-2')
-						: setCurrentQuestion('emprego1-1-1')
+					setIndicator('health', 6)
+					setCurrentQuestion('emprego1-2-1')
 				},
 			},
 			option3: {
-				text: 'Sair',
+				text: 'Sair com seus amigos para esfriar a cabeça antes',
 				consequence: () => {
-					doWithProbability(0.3)
-						? setCurrentQuestion('emprego1-1-2')
-						: setCurrentQuestion('emprego1-1-1')
+					setIndicator('friends', 2)
+					setIndicator('health', 5)
+					setCurrentQuestion('emprego1-2-1')
+				},
+			},
+		},
+		{
+			id: 'emprego1-2-1',
+			questionText:
+				'Chegou a hora da apresentação! Clique na tela para passar os slides no tempo certo, ou perderá a atenção da sua equipe!',
+			consequence: () => {
+				setCurrentQuestion('naoemprego')
+			},
+			isAnnouncer: true,
+		},
+		{
+			id: 'emprego1-3-1',
+			questionText:
+				'Você acordou sozinho e olhou pro relógio... está atrasado pro trabalho! O que fazer?',
+			option1: {
+				text: 'Ligar pro seu chefe fingindo que está doente',
+				consequence: () => {
+					setCurrentQuestion(
+						doWithProbability(0.3) ? 'emprego1-3-ruim' : 'emprego1-3-bom'
+					)
+				},
+			},
+			option2: {
+				text: 'Ir ao trabalho mesmo assim',
+				consequence: () => {
+					setIndicator('health', 6)
+					setCurrentQuestion('emprego1-3-honesto')
+				},
+			},
+			option3: {
+				text: 'Ir ao trabalho, mas dizer que seu carro quebrou no caminho',
+				consequence: () => {
+					setCurrentQuestion(
+						doWithProbability(0.5) ? 'emprego1-3-ruim' : 'emprego1-3-bom'
+					)
+				},
+			},
+		},
+		{
+			id: 'emprego1-3-bom',
+			questionText:
+				'Ufa, seu chefe não desconfiou da mentira. Melhor que isso não aconteca de novo!',
+			consequence: () => {
+				setIndicator('health', 4)
+				setCurrentQuestion('emprego1-4-1')
+			},
+			isAnnouncer: true,
+		},
+		{
+			id: 'emprego1-3-ruim',
+			questionText:
+				'Seu chefe não acreditou em você e ficou furioso pela mentira!',
+			consequence: () => {
+				setIndicator('health', -8)
+				setIndicator('friends', -6)
+				setCurrentQuestion('emprego1-4-1')
+			},
+			isAnnouncer: true,
+		},
+		{
+			id: 'emprego1-3-honesto',
+			questionText:
+				'Seu chefe não ficou tão bravo porque foi seu primeiro atraso. É só não fazer de novo...',
+			consequence: () => {
+				setIndicator('health', 2)
+				setCurrentQuestion('emprego1-4-1')
+			},
+			isAnnouncer: true,
+		},
+		{
+			id: 'emprego1-4-1',
+			questionText:
+				'Um amigo da faculdade e o pessoal do escritório te chamaram pra sair pra jantar no mesmo dia, o que você decide?',
+			option1: {
+				text: 'Sair com colegas de trabalho',
+				consequence: () => {
+					setIndicator('friends', 5)
+					setIndicator('health', 5)
+					setCurrentQuestion('emprego2-1')
+				},
+			},
+			option2: {
+				text: 'Ficar em casa',
+				consequence: () => {
+					setIndicator('health', -2)
+					setIndicator('friends', -5)
+					setCurrentQuestion('emprego2-1')
+				},
+			},
+			option3: {
+				text: 'Sair com amigo da faculdade',
+				consequence: () => {
+					setIndicator('friends', 3)
+					setCurrentQuestion(
+						doWithProbability(0.5) ? 'emprego1-4-amigo-oferta' : 'emprego2-1'
+					)
+				},
+			},
+		},
+		{
+			id: 'emprego1-4-amigo-oferta',
+			questionText: 'Seu amigo te ofereceu uma vaga ainda melhor de trabalho!',
+			consequence: () => {
+				setIndicator('health', 8)
+				setCurrentQuestion('oferta2')
+			},
+			isAnnouncer: true,
+			buttonText: 'Ver Oferta',
+		},
+		{
+			id: 'oferta2',
+			questionText: 'Oferta: ',
+			option1: {
+				text: 'Aceitar',
+				consequence: () => {
+					setIndicator('friends', 5)
+					setIndicator('health', 5)
+					setCurrentQuestion('emprego2-1')
+				},
+			},
+			option2: {
+				text: 'Recusar',
+				consequence: () => {
+					setIndicator('health', -2)
+					setIndicator('friends', -5)
+					setCurrentQuestion('emprego2-1')
+				},
+			},
+		},
+		{
+			id: 'emprego2-1',
+			questionText: '',
+			option1: {
+				text: 'Sair com colegas de trabalho',
+				consequence: () => {
+					setIndicator('friends', 5)
+					setIndicator('health', 5)
+					setCurrentQuestion('emprego2-1')
+				},
+			},
+			option2: {
+				text: 'Ficar em casa',
+				consequence: () => {
+					setIndicator('health', -2)
+					setIndicator('friends', -5)
+					setCurrentQuestion('emprego2-1')
+				},
+			},
+			option3: {
+				text: 'Sair com amigo da faculdade',
+				consequence: () => {
+					setIndicator('friends', 3)
+					setCurrentQuestion(
+						doWithProbability(0.5) ? 'emprego1-4-amigo-oferta' : 'emprego2-1'
+					)
 				},
 			},
 		},
@@ -754,13 +931,31 @@ function MainScreen() {
 			return <ClickGame moveAhead={() => setCurrentQuestion('7')} />
 		}
 
-		const question = questions.find((q) => q.id == id)
+		const question =
+			questions.find((q) => q.id == id) ||
+			questions.find((q) => q.id == 'somethingwrong')
 
 		if (question.isAnnouncer !== undefined) {
 			return (
 				<Announcer
 					text={question.questionText}
 					consequence={question.consequence}
+					buttonText={
+						question.buttonText !== undefined
+							? question.buttonText
+							: 'Continuar'
+					}
+					isTitle={question.isTitle}
+				/>
+			)
+		}
+
+		if (question.option3 === undefined) {
+			return (
+				<Question
+					question={question.questionText}
+					option1={question.option1}
+					option2={question.option2}
 				/>
 			)
 		}

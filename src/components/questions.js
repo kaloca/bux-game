@@ -14,9 +14,14 @@ export default function Question(props) {
 					<Button style={{ height: '5vh' }} onClick={props.option2.consequence}>
 						{props.option2.text}
 					</Button>
-					<Button style={{ height: '5vh' }} onClick={props.option3.consequence}>
-						{props.option3.text}
-					</Button>
+					{props.option3 ? (
+						<Button
+							style={{ height: '5vh' }}
+							onClick={props.option3.consequence}
+						>
+							{props.option3.text}
+						</Button>
+					) : null}
 					{props.fourthQuestion ? (
 						<Button
 							style={{ height: '5vh' }}
