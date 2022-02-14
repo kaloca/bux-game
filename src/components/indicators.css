@@ -11,10 +11,10 @@
     max-width: 10px;
 }
 
-.indicatorText{
+.indicatorText {
     color: white;
-    font-size: 3vh;
     font-weight: bold;
+    font-size: 1.5vw;
 }
 
 .indicatorDiv {
@@ -26,7 +26,14 @@
 
 .indicatorIcon {
     color: white;
-    height: 3vh;
-    width: 3vh;
+    height: 1.5vw;
+    width: 1.5vw;
+    margin-right: 0.5vw;
+}
+
+.figure {
+    margin-top: 15vh;
+    height: 20vh;
+    margin-left: 10px;
     margin-right: 10px;
 }

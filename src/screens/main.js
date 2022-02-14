@@ -1,18 +1,26 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Question from 'components/questions'
 import Indicators from 'components/indicators'
 import Announcer from 'components/announcer'
+import loading from 'assets/loading.gif'
+
 import MemoryGame from '../minigames/memory/App'
 import ClickGame from '../minigames/clickgame/ClickGame'
 import './main.css'
 
 function MainScreen() {
+	const [displayIndicators, setDisplayIndicators] = useState(false)
+	const [isLoading, setIsLoading] = useState(false)
 	const [health, setHealth] = useState(80)
 	const [education, setEducation] = useState(60)
 	const [money, setMoney] = useState(1000)
 	const [friends, setFriends] = useState(50)
+	const [age, setAge] = useState(0)
 	const [currentQuestion, setCurrentQuestion] = useState('titlescreen')
-	const [isInClub, setIsInClub] = useState(false)
+	const [club, setClub] = useState('no')
+	const [livingSpace, setLivingSpace] = useState('parents')
+	const [partyType, setPartyType] = useState('parents50')
+	const [isDrunk, setIsDrunk] = useState(false)
 
 	const doWithProbability = (n) => {
 		return !!n && Math.random() <= n
@@ -40,11 +48,67 @@ function MainScreen() {
 		}
 	}
 
+	const decidePartyScenario = () => {
+		switch (partyType) {
+			case 'friends10':
+				setCurrentQuestion(
+					doWithProbability(0.95) ? 'festa-friends-bom' : 'festa-friends-ruim'
+				)
+				break
+			case 'friends50':
+				setCurrentQuestion(
+					doWithProbability(0.8) ? 'festa-friends-bom' : 'festa-friends-ruim'
+				)
+				break
+			case 'friends200':
+				setCurrentQuestion(
+					doWithProbability(0.5) ? 'festa-friends-bom' : 'festa-friends-ruim'
+				)
+				break
+			case 'alone10':
+				setCurrentQuestion(
+					doWithProbability(0.99) ? 'festa-alone-bom' : 'festa-alone-ruim'
+				)
+				break
+			case 'alone50':
+				setCurrentQuestion(
+					doWithProbability(0.95) ? 'festa-alone-bom' : 'festa-alone-ruim'
+				)
+				break
+			case 'alone200':
+				setCurrentQuestion(
+					doWithProbability(0.8) ? 'festa-alone-bom' : 'festa-alone-ruim'
+				)
+				break
+			case 'parents10':
+				setCurrentQuestion(
+					doWithProbability(0.8) ? 'festa-parents-bom' : 'festa-parents-ruim'
+				)
+				break
+			case 'parents50':
+				setCurrentQuestion(
+					doWithProbability(0.5) ? 'festa-parents-bom' : 'festa-parents-ruim'
+				)
+				break
+			case 'parents200':
+				setCurrentQuestion(
+					doWithProbability(0.3) ? 'festa-parents-bom' : 'festa-parents-ruim'
+				)
+				break
+			default:
+				setCurrentQuestion('festa-parents-bom')
+				break
+		}
+	}
+
 	const questions = [
 		{
 			id: 'titlescreen',
 			questionText: 'BuxLife',
-			consequence: () => setCurrentQuestion('estagioA'),
+			consequence: () => {
+				setDisplayIndicators(true)
+				setCurrentQuestion('1')
+			},
 			isTitle: true,
 			isAnnouncer: true,
 			buttonText: 'Começar',
@@ -58,6 +122,8 @@ function MainScreen() {
 				setEducation(60)
 				setMoney(1000)
 				setFriends(50)
+				setAge(0)
+				setDisplayIndicators(false)
 				setCurrentQuestion('titlescreen')
 			},
 			isAnnouncer: true,
@@ -222,6 +288,7 @@ function MainScreen() {
 				text: 'Universidade Federal (★★★★★)',
 				consequence: () => {
 					if (education >= 95) {
+						setAge(1)
 						setCurrentQuestion('clickgame')
 					}
 				},
@@ -229,6 +296,7 @@ function MainScreen() {
 			option2: {
 				text: 'Universidade Particular (★★★★)',
 				consequence: () => {
+					setAge(1)
 					setIndicator('money', -20000)
 					setCurrentQuestion('clickgame')
 				},
@@ -236,12 +304,14 @@ function MainScreen() {
 			option3: {
 				text: 'Faculdade Pública (★★★)',
 				consequence: () => {
+					setAge(1)
 					setCurrentQuestion('clickgame')
 				},
 			},
 			option4: {
 				text: 'Não fazer faculdade (★)',
 				consequence: () => {
+					setAge(1)
 					setCurrentQuestion('7')
 				},
 			},
@@ -264,6 +334,7 @@ function MainScreen() {
 					setIndicator('money', -1000)
 					setIndicator('health', 10)
 					setIndicator('friends', 10)
+					setLivingSpace('friends')
 					setCurrentQuestion('8')
 				},
 			},
@@ -274,6 +345,7 @@ function MainScreen() {
 					setIndicator('health', 20)
 					setIndicator('education', 5)
 					setIndicator('friends', 5)
+					setLivingSpace('alone')
 					setCurrentQuestion('8')
 				},
 			},
@@ -341,17 +413,19 @@ function MainScreen() {
 			option1: {
 				text: 'Tentar entrar no clube de teatro',
 				consequence: () => {
-					doWithProbability(0.9)
-						? setCurrentQuestion('12')
-						: setCurrentQuestion('13')
+					if (doWithProbability(0.8)) {
+						setCurrentQuestion('12')
+						setClub('theater')
+					} else setCurrentQuestion('13')
 				},
 			},
 			option2: {
 				text: 'Tentar entrar no clube de empreendedorismo',
 				consequence: () => {
-					doWithProbability(0.2)
-						? setCurrentQuestion('12')
-						: setCurrentQuestion('13')
+					if (doWithProbability(0.2)) {
+						setCurrentQuestion('12')
+						setClub('entrepreneur')
+					} else setCurrentQuestion('13')
 				},
 			},
 			option3: {
@@ -363,9 +437,10 @@ function MainScreen() {
 			option4: {
 				text: 'Entrar no coletivo político da faculdade.',
 				consequence: () => {
-					doWithProbability(0.95)
-						? setCurrentQuestion('14')
-						: setCurrentQuestion('13')
+					if (doWithProbability(0.95)) {
+						setCurrentQuestion('14')
+						setClub('politics')
+					} else setCurrentQuestion('13')
 				},
 			},
 		},
@@ -376,31 +451,15 @@ function MainScreen() {
 			option1: {
 				text: 'Aceitar o convite',
 				consequence: () => {
-					setIndicator('money', -3000)
-					setIndicator('health', 10)
-					setCurrentQuestion('15')
+					setCurrentQuestion('12')
 				},
 			},
 			option2: {
-				text: 'Recusar a oferta',
+				text: 'Recusar o convite',
 				consequence: () => {
-					setIndicator('money', -200)
-					setIndicator('health', -8)
-					setCurrentQuestion('9')
-				},
-			},
-			option3: {
-				text: '',
-				consequence: () => {
-					setHealth('health', 4)
-					setCurrentQuestion('9')
-				},
-			},
-			option4: {
-				text: 'Entrar no coletivo político da faculdade.',
-				consequence: () => {
-					setHealth('health', 4)
-					setCurrentQuestion('9')
+					setIndicator('friends', -3)
+					setIndicator('health', -2)
+					setCurrentQuestion('15')
 				},
 			},
 		},
@@ -410,8 +469,7 @@ function MainScreen() {
 			consequence: () => {
 				setIndicator('health', 8)
 				setIndicator('friends', 10)
-				setIsInClub(true)
-				setCurrentQuestion('10')
+				setCurrentQuestion('15')
 			},
 			isAnnouncer: true,
 		},
@@ -579,6 +637,7 @@ function MainScreen() {
 			questionText:
 				'A faculdade chegou ao fim. Agora está na hora de se tornar um adulto de verdade.',
 			consequence: () => {
+				setAge(2)
 				setIndicator('health', 8)
 				setIndicator('education', 10)
 				setCurrentQuestion('buscaporempregos')
@@ -887,40 +946,208 @@ function MainScreen() {
 				consequence: () => {
 					setIndicator('health', -2)
 					setIndicator('friends', -5)
-					setCurrentQuestion('emprego2-1')
+					setCurrentQuestion('emprego2-2')
 				},
 			},
 		},
 		{
 			id: 'emprego2-1',
-			questionText: '',
+			questionText:
+				'Você decide dar um festa em casa para comemorar o novo emprego. Quantas pessoas vai convidar?',
 			option1: {
-				text: 'Sair com colegas de trabalho',
+				text: '10 pessoas',
 				consequence: () => {
-					setIndicator('friends', 5)
-					setIndicator('health', 5)
-					setCurrentQuestion('emprego2-1')
+					setPartyType(livingSpace + '10')
+					setCurrentQuestion('festa-1')
 				},
 			},
 			option2: {
-				text: 'Ficar em casa',
+				text: '50 pessoas',
 				consequence: () => {
-					setIndicator('health', -2)
-					setIndicator('friends', -5)
-					setCurrentQuestion('emprego2-1')
+					setPartyType(livingSpace + '50')
+					setCurrentQuestion('festa-1')
 				},
 			},
 			option3: {
-				text: 'Sair com amigo da faculdade',
+				text: '200 pessoas',
 				consequence: () => {
-					setIndicator('friends', 3)
+					setPartyType(livingSpace + '200')
+					setCurrentQuestion('festa-1')
+				},
+			},
+		},
+		{
+			id: 'festa-1',
+			questionText:
+				'A festa começa, todos estão se divertindo. Seus amigos te oferecem bebida. Você aceita?',
+			option1: {
+				text: 'Sim',
+				consequence: () => {
+					setIndicator('friends', 5)
+					setIndicator('health', 5)
+					setIsDrunk(true)
+					decidePartyScenario()
+				},
+			},
+			option2: {
+				text: 'Não',
+				consequence: () => {
+					setIndicator('health', -5)
+					setIndicator('friends', -2)
+					setIsDrunk(false)
+					decidePartyScenario()
+				},
+			},
+		},
+		{
+			id: 'festa-parents-bom',
+			questionText: 'Seus pais não suspeitaram de nada e a festa terminou bem!',
+			consequence: () => {
+				setIndicator('health', 10)
+				setIndicator('friends', 6)
+				setCurrentQuestion('emprego2-2')
+			},
+			isAnnouncer: true,
+		},
+		{
+			id: 'festa-parents-ruim',
+			questionText: !isDrunk
+				? 'Seus pais chegaram mais cedo de viagem e descobriram a festa. Mas como você não bebeu, eles não ficaram bravos.'
+				: 'Seus pais chegaram com você bêbado em casa e ficaram furiosos! Todos foram expulsos!',
+			consequence: () => {
+				setIndicator('health', isDrunk ? -10 : 5)
+				setIndicator('friends', isDrunk ? -7 : 4)
+				setCurrentQuestion('emprego2-2')
+			},
+			isAnnouncer: true,
+		},
+		{
+			id: 'festa-friends-bom',
+			questionText: 'A festa acabou bem e todos saíram felizes!',
+			consequence: () => {
+				setIndicator('health', 10)
+				setIndicator('friends', 10)
+				setCurrentQuestion('emprego2-2')
+			},
+			isAnnouncer: true,
+		},
+		{
+			id: 'festa-friends-ruim',
+			questionText: !isDrunk
+				? 'Alguém chamou a polícia por reclamações de barulho. Mas como você estava sóbrio, pode conversar com eles e resolver tudo'
+				: 'Alguém chamou a polícia por reclamações de barulho. Você estava bêbado e não soube dialogar. Todos foram expulsos e você teve que pagar uma multa!',
+			consequence: () => {
+				setIndicator('health', isDrunk ? -10 : 5)
+				setIndicator('friends', isDrunk ? -9 : 5)
+				setCurrentQuestion('emprego2-2')
+			},
+			isAnnouncer: true,
+		},
+		{
+			id: 'festa-alone-bom',
+			questionText: 'A festa acabou bem e todos saíram felizes!',
+			consequence: () => {
+				setIndicator('health', 10)
+				setIndicator('friends', 9)
+				setCurrentQuestion('emprego2-2')
+			},
+			isAnnouncer: true,
+		},
+		{
+			id: 'festa-alone-ruim',
+			questionText: !isDrunk
+				? 'Alguém chamou a polícia por reclamações de barulho. Mas como você estava sóbrio, pode conversar com eles e resolver tudo'
+				: 'Alguém chamou a polícia por reclamações de barulho. Você estava bêbado e não soube dialogar. Todos foram expulsos e você teve que pagar uma multa!',
+			consequence: () => {
+				setIndicator('health', isDrunk ? -10 : 5)
+				setIndicator('friends', isDrunk ? -7 : 4)
+				setCurrentQuestion('emprego2-2')
+			},
+			isAnnouncer: true,
+		},
+		{
+			id: 'emprego2-2',
+			questionText: 'Seu chefe te chama pra jantar. Você aceita?',
+			option1: {
+				text: 'Sim',
+				consequence: () => {
+					setIndicator('friends', 4)
+					setCurrentQuestion('emprego2-3')
+				},
+			},
+			option2: {
+				text: 'Não',
+				consequence: () => {
+					setIndicator('friends', -3)
+					setCurrentQuestion('emprego2-3')
+				},
+			},
+		},
+		{
+			id: 'emprego2-3',
+			questionText:
+				'Analisando relatórios antigos, você percebe que cometeu um erro. Você conta ao seu chefe?',
+			option1: {
+				text: 'Sim',
+				consequence: () => {
+					setCurrentQuestion('emprego2-3-1')
+				},
+			},
+			option2: {
+				text: 'Não',
+				consequence: () => {
+					setIndicator('friends', -3)
 					setCurrentQuestion(
-						doWithProbability(0.5) ? 'emprego1-4-amigo-oferta' : 'emprego2-1'
+						doWithProbability(0.5) ? 'emprego2-3-2' : 'emprego2-3-3'
 					)
 				},
 			},
 		},
+		{
+			id: 'emprego2-3-1',
+			questionText:
+				'Seu chefe gostou da honestidade e não ficou bravo. Boa escolha!',
+			consequence: () => {
+				setIndicator('health', 6)
+				setIndicator('friends', 2)
+				setCurrentQuestion('emprego2-4')
+			},
+			isAnnouncer: true,
+		},
+		{
+			id: 'emprego2-3-2',
+			questionText:
+				'Seu chefe descobriu e ficou furioso que você não tinha percebido!',
+			consequence: () => {
+				setIndicator('health', -8)
+				setIndicator('friends', -5)
+				setCurrentQuestion('emprego2-4')
+			},
+			isAnnouncer: true,
+		},
+		{
+			id: 'emprego2-3-3',
+			questionText:
+				'Ninguém nunca percebeu o seu erro, mas a empresa sofreu um prejuízo por conta dele.',
+			consequence: () => {
+				setIndicator('health', -4)
+				setCurrentQuestion('emprego2-4')
+			},
+			isAnnouncer: true,
+		},
 	]
+
+	useEffect(() => {
+		setIsLoading(true)
+		let timer = setTimeout(
+			() => setIsLoading(false),
+			Math.floor(Math.random() * (1200 - 500 + 1) + 500)
+		)
+
+		return () => {
+			clearTimeout(timer)
+		} // setTimeout(setIsLoading(false), 3000)
+	}, [currentQuestion])
 
 	const createQuestionWithId = (id) => {
 		if (id === 'memorygame') {
@@ -932,8 +1159,8 @@ function MainScreen() {
 		}
 
 		const question =
-			questions.find((q) => q.id == id) ||
-			questions.find((q) => q.id == 'somethingwrong')
+			questions.find((q) => q.id === id) ||
+			questions.find((q) => q.id === 'somethingwrong')
 
 		if (question.isAnnouncer !== undefined) {
 			return (
@@ -985,13 +1212,19 @@ function MainScreen() {
 
 	return (
 		<div class='root'>
-			<Indicators
-				health={health}
-				education={education}
-				money={money}
-				friends={friends}
-			/>
-			{createQuestionWithId(currentQuestion)}
+			{displayIndicators ? (
+				<Indicators
+					health={health}
+					education={education}
+					money={money}
+					friends={friends}
+					age={age}
+				/>
+			) : null}
+			{!isLoading ? createQuestionWithId(currentQuestion) : null}
+			{isLoading ? (
+				<img class='loadinggif' src={loading} alt='loadingGif' />
+			) : null}
 		</div>
 	)
 }

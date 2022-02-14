@@ -6,3 +6,8 @@
     align-items: center;
     width: 100%;
 }
+
+.loadinggif {
+    width: 16vw;
+    margin-top: 15vh;
+}
