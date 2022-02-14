@@ -3,6 +3,8 @@ import Question from 'components/questions'
 import Indicators from 'components/indicators'
 import Announcer from 'components/announcer'
 import loading from 'assets/loading.gif'
+import buxlogo from 'assets/bux_370.png'
+import { backdrops } from 'assets/backdrops'
 
 import MemoryGame from '../minigames/memory/App'
 import ClickGame from '../minigames/clickgame/ClickGame'
@@ -1211,7 +1213,15 @@ function MainScreen() {
 	}
 
 	return (
-		<div class='root'>
+		<div
+			class='root'
+			style={{
+				backgroundImage: `url(${backdrops[2]})`,
+				backgroundRepeat: 'no-repeat',
+				height: '100vh',
+				backgroundPosition: 'center',
+			}}
+		>
 			{displayIndicators ? (
 				<Indicators
 					health={health}
@@ -1225,6 +1235,7 @@ function MainScreen() {
 			{isLoading ? (
 				<img class='loadinggif' src={loading} alt='loadingGif' />
 			) : null}
+			<img class='buxlogo' src={buxlogo}></img>
 		</div>
 	)
 }

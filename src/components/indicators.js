@@ -11,20 +11,20 @@ export default function Indicators(props) {
 	return (
 		<div class='Container'>
 			<div class='indicatorDiv'>
-				<GiBrain class='indicatorIcon' />
+				<GiBrain class='indicatorIcon' id='educationIcon' />
 				<span class='indicatorText'>{props.education}%</span>
 			</div>
 			<div class='indicatorDiv'>
-				<FaSmile class='indicatorIcon' />
+				<FaSmile class='indicatorIcon' id='healthIcon' />
 				<span class='indicatorText'>{props.health}%</span>
 			</div>
 			<img class='figure' src={agesMale[props.age]} alt='figure'></img>
 			<div class='indicatorDiv'>
-				<FaUserFriends class='indicatorIcon' />
+				<FaUserFriends class='indicatorIcon' id='friendsIcon' />
 				<span class='indicatorText'>{props.friends}%</span>
 			</div>
 			<div class='indicatorDiv'>
-				<RiMoneyDollarCircleFill class='indicatorIcon' />
+				<RiMoneyDollarCircleFill class='indicatorIcon' id='moneyIcon' />
 				<span class='indicatorText'>{props.money}$</span>
 			</div>
 			{/* <Button

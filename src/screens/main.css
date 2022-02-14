@@ -1,5 +1,5 @@
 .root {
-    background-color: darkcyan;
+    background-color: rgb(1, 72, 72);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -10,4 +10,23 @@
 .loadinggif {
     width: 16vw;
     margin-top: 15vh;
+}
+
+.div {
+    background: rgb(0, 0, 0);
+    background: transparent\9;
+    background: rgba(0, 0, 0, 0.4);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#66000000, endColorstr=#66000000);
+    zoom: 1;
+}
+
+.root:nth-child(n) {
+    filter: none;
+}
+
+.buxlogo {
+    width: 130px;
+    position: absolute;
+    top: 1.2vh;
+    left: 1vw;
 }

@@ -1,7 +1,7 @@
 .questionsContainer {
     display: flex;
     flex-direction: column;
-   /* // justify-content: center; */
+    /* // justify-content: center; */
     align-items: center;
 
 }
@@ -14,9 +14,9 @@
 .buttonContainer {
     height: 22vh;
     min-width: 20vw;
-    display:flex;
+    display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: space-around;
 }
 
 .header {
@@ -30,4 +30,20 @@
 .questionContainer {
     width: 30vw;
     margin-top: 7vh;
+}
+
+#educationIcon {
+    color: #780abf;
+}
+
+#healthIcon {
+    color: #6740cd;
+}
+
+#friendsIcon {
+    color: #5771da;
+}
+
+#moneyIcon {
+    color: #4a97e4;
 }
