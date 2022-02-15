@@ -133,7 +133,7 @@ export default function App(props) {
 	}
 
 	return (
-		<div className='App'>
+		<div className='MemoryApp'>
 			<header>
 				<h3 style={{ color: 'white' }}>Chegou a hora da prova!</h3>
 				<div>

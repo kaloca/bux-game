@@ -12,6 +12,7 @@ import './main.css'
 
 function MainScreen() {
 	const [displayIndicators, setDisplayIndicators] = useState(false)
+	const [background, setBackground] = useState(0)
 	const [isLoading, setIsLoading] = useState(false)
 	const [health, setHealth] = useState(80)
 	const [education, setEducation] = useState(60)
@@ -125,6 +126,7 @@ function MainScreen() {
 				setMoney(1000)
 				setFriends(50)
 				setAge(0)
+				setBackground(0)
 				setDisplayIndicators(false)
 				setCurrentQuestion('titlescreen')
 			},
@@ -290,6 +292,7 @@ function MainScreen() {
 				text: 'Universidade Federal (★★★★★)',
 				consequence: () => {
 					if (education >= 95) {
+						setBackground(1)
 						setAge(1)
 						setCurrentQuestion('clickgame')
 					}
@@ -299,6 +302,7 @@ function MainScreen() {
 				text: 'Universidade Particular (★★★★)',
 				consequence: () => {
 					setAge(1)
+					setBackground(1)
 					setIndicator('money', -20000)
 					setCurrentQuestion('clickgame')
 				},
@@ -307,6 +311,7 @@ function MainScreen() {
 				text: 'Faculdade Pública (★★★)',
 				consequence: () => {
 					setAge(1)
+					setBackground(1)
 					setCurrentQuestion('clickgame')
 				},
 			},
@@ -314,6 +319,7 @@ function MainScreen() {
 				text: 'Não fazer faculdade (★)',
 				consequence: () => {
 					setAge(1)
+					setBackground(2)
 					setCurrentQuestion('7')
 				},
 			},
@@ -640,6 +646,7 @@ function MainScreen() {
 				'A faculdade chegou ao fim. Agora está na hora de se tornar um adulto de verdade.',
 			consequence: () => {
 				setAge(2)
+				setBackground(2)
 				setIndicator('health', 8)
 				setIndicator('education', 10)
 				setCurrentQuestion('buscaporempregos')
@@ -1216,9 +1223,9 @@ function MainScreen() {
 		<div
 			class='root'
 			style={{
-				backgroundImage: `url(${backdrops[2]})`,
+				backgroundImage: `url(${backdrops[background]})`,
 				backgroundRepeat: 'no-repeat',
-				height: '100vh',
+				backgroundSize: 'cover',
 				backgroundPosition: 'center',
 			}}
 		>
@@ -1235,7 +1242,9 @@ function MainScreen() {
 			{isLoading ? (
 				<img class='loadinggif' src={loading} alt='loadingGif' />
 			) : null}
-			<img class='buxlogo' src={buxlogo}></img>
+			<a href='https://buxbank.com.br'>
+				<img class='buxlogo' src={buxlogo} alt='logo-bux' />
+			</a>
 		</div>
 	)
 }
