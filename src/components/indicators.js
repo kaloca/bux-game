@@ -1,11 +1,10 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { FaUserFriends, FaSmile } from 'react-icons/fa'
 import { GiBrain } from 'react-icons/gi'
 import { RiMoneyDollarCircleFill } from 'react-icons/ri'
 import { agesMale } from 'assets/ages'
 
 import './indicators.css'
-import { Button } from 'shards-react'
 
 export default function Indicators(props) {
 	return (
@@ -18,7 +17,9 @@ export default function Indicators(props) {
 				<FaSmile class='indicatorIcon' id='healthIcon' />
 				<span class='indicatorText'>{props.health}%</span>
 			</div>
-			<img class='figure' src={agesMale[props.age]} alt='figure'></img>
+			<div>
+				<img class='figure' src={agesMale[props.age]} alt='figure'></img>
+			</div>
 			<div class='indicatorDiv'>
 				<FaUserFriends class='indicatorIcon' id='friendsIcon' />
 				<span class='indicatorText'>{props.friends}%</span>

@@ -132,6 +132,18 @@ export default function App(props) {
 		setCards(shuffleCards(uniqueElementsArray.concat(uniqueElementsArray)))
 	}
 
+	const getScore = (n) => {
+		if (n < 10) return 'A'
+		if (n < 13) return 'B'
+		if (n < 15) return 'C'
+		if (n < 20) return 'D'
+		else return 'F'
+	}
+
+	useEffect(() => {
+		setOpenCards(props.handicap)
+	}, [])
+
 	return (
 		<div className='MemoryApp'>
 			<header>
@@ -178,12 +190,15 @@ export default function App(props) {
 				</DialogTitle>
 				<DialogContent>
 					<DialogContentText id='alert-dialog-description'>
-						Você terminou o jogo em {moves} movimentos. Isso te da uma nota de
-						getscore
+						Você terminou o jogo em {moves} movimentos. Isso te da uma nota{' '}
+						{getScore(moves)}
 					</DialogContentText>
 				</DialogContent>
 				<DialogActions>
-					<Button onClick={props.moveAhead} color='primary'>
+					<Button
+						onClick={() => props.moveAhead(getScore(moves))}
+						color='primary'
+					>
 						Continuar
 					</Button>
 				</DialogActions>

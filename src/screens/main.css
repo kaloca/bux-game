@@ -30,3 +30,10 @@
     top: 1.2vh;
     left: 1vw;
 }
+
+.idade {
+    color: white;
+    font-weight: bold;
+    font-size: 1vw;
+    margin-top: 5vh;
+}

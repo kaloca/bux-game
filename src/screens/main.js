@@ -19,8 +19,10 @@ function MainScreen() {
 	const [health, setHealth] = useState(80)
 	const [education, setEducation] = useState(60)
 	const [money, setMoney] = useState(1000)
+	const [studyAmount, setStudyAmount] = useState('')
 	const [friends, setFriends] = useState(50)
 	const [age, setAge] = useState(0)
+	const [score, setScore] = useState(15)
 	const [currentQuestion, setCurrentQuestion] = useState('titlescreen')
 	const [major, setMajor] = useState('nocollege')
 	const [club, setClub] = useState('no')
@@ -107,30 +109,49 @@ function MainScreen() {
 		}
 	}
 
+	const resetStates = () => {
+		setHealth(80)
+		setEducation(60)
+		setMoney(1000)
+		setFriends(50)
+		setAge(0)
+		setBackground(0)
+		setDisplayIndicators(false)
+		setScore(15)
+		setClub('no')
+		setLivingSpace('parents')
+		setMajor('nocollege')
+	}
+
 	const questions = [
 		{
 			id: 'titlescreen',
 			questionText: 'BuxLife',
 			consequence: () => {
 				setDisplayIndicators(true)
-				setCurrentQuestion('1')
+				setCurrentQuestion('etapa1')
 			},
 			isTitle: true,
 			isAnnouncer: true,
 			buttonText: 'Começar',
 		},
 		{
+			id: 'etapa1',
+			questionText: 'Parte 1: Ensino Médio',
+			consequence: () => {
+				setDisplayIndicators(true)
+				setCurrentQuestion('1')
+			},
+			//isTitle: true,
+			isAnnouncer: true,
+			buttonText: 'Continuar',
+		},
+		{
 			id: 'somethingwrong',
 			questionText:
 				'Infelizmente, você foi atropelado por um ônibus e morreu. Quer recomeçar o jogo?',
 			consequence: () => {
-				setHealth(80)
-				setEducation(60)
-				setMoney(1000)
-				setFriends(50)
-				setAge(0)
-				setBackground(0)
-				setDisplayIndicators(false)
+				resetStates()
 				setCurrentQuestion('titlescreen')
 			},
 			isAnnouncer: true,
@@ -202,6 +223,7 @@ function MainScreen() {
 				consequence: () => {
 					setIndicator('education', -10)
 					setIndicator('friends', 5)
+					setStudyAmount('none')
 					setCurrentQuestion('memorygame')
 				},
 			},
@@ -210,12 +232,14 @@ function MainScreen() {
 				consequence: () => {
 					setIndicator('friends', 5)
 					setIndicator('health', -10)
+					setStudyAmount('half')
 					setCurrentQuestion('memorygame')
 				},
 			},
 			option3: {
 				text: 'Ficar em casa estudando',
 				consequence: () => {
+					setStudyAmount('full')
 					setIndicator('friends', -10)
 					setIndicator('education', 10)
 					setCurrentQuestion('memorygame')
@@ -229,6 +253,7 @@ function MainScreen() {
 			option1: {
 				text: 'Arranjar um trabalho de verão',
 				consequence: () => {
+					setScore(16)
 					setIndicator('money', 500)
 					setIndicator('friends', 5)
 					setIndicator('health', -8)
@@ -238,6 +263,7 @@ function MainScreen() {
 			option2: {
 				text: 'Estudando para o vestibular',
 				consequence: () => {
+					setScore(16)
 					setIndicator('education', 10)
 					setIndicator('health', -8)
 					setCurrentQuestion('5')
@@ -246,6 +272,7 @@ function MainScreen() {
 			option3: {
 				text: 'Viajar com seus amigos',
 				consequence: () => {
+					setScore(16)
 					setIndicator('friends', 10)
 					setIndicator('health', 10)
 					setIndicator('money', -300)
@@ -261,6 +288,7 @@ function MainScreen() {
 				text: 'Contratar um cursinho',
 				consequence: () => {
 					if ((money) => 1000) {
+						setScore(17)
 						setIndicator('money', -1000)
 						setIndicator('friends', 3)
 						setIndicator('health', -2)
@@ -272,6 +300,7 @@ function MainScreen() {
 			option2: {
 				text: 'Dedicar 3 horas diárias para estudar em casa',
 				consequence: () => {
+					setScore(17)
 					setIndicator('education', 10)
 					setIndicator('health', -10)
 					setIndicator('friends', 5)
@@ -281,6 +310,7 @@ function MainScreen() {
 			option3: {
 				text: 'Não estudar',
 				consequence: () => {
+					setScore(17)
 					setIndicator('friends', 10)
 					setIndicator('health', 8)
 					setCurrentQuestion('6')
@@ -296,34 +326,38 @@ function MainScreen() {
 				consequence: () => {
 					if (education >= 95) {
 						setBackground(1)
+						setScore(18)
 						setAge(1)
-						setCurrentQuestion('clickgame')
+						setCurrentQuestion('7')
 					} else {
 						showDialog()
 					}
 				},
 			},
 			option2: {
-				text: 'Universidade Particular (★★★★)',
+				text: 'Universidade Particular ($20.000)(★★★★)',
 				consequence: () => {
 					setAge(1)
+					setScore(18)
 					setBackground(1)
 					setIndicator('money', -20000)
-					setCurrentQuestion('clickgame')
+					setCurrentQuestion('7')
 				},
 			},
 			option3: {
 				text: 'Faculdade Pública (★★★)',
 				consequence: () => {
 					setAge(1)
+					setScore(18)
 					setBackground(1)
-					setCurrentQuestion('clickgame')
+					setCurrentQuestion('7')
 				},
 			},
 			option4: {
 				text: 'Não fazer faculdade (★)',
 				consequence: () => {
 					setAge(1)
+					setScore(18)
 					setBackground(2)
 					setCurrentQuestion('naofacul')
 				},
@@ -386,7 +420,7 @@ function MainScreen() {
 			option3: {
 				text: 'Bicicleta ($0)',
 				consequence: () => {
-					setHealth('health', 4)
+					setIndicator('health', 4)
 					setCurrentQuestion('9')
 				},
 			},
@@ -602,6 +636,7 @@ function MainScreen() {
 			option1: {
 				text: 'Estudar mais durante o último ano',
 				consequence: () => {
+					setScore(20)
 					setIndicator('education', 10)
 					setIndicator('health', -8)
 					setIndicator('friends', -5)
@@ -611,6 +646,7 @@ function MainScreen() {
 			option2: {
 				text: 'Não estudar e aproveitar as amizades',
 				consequence: () => {
+					setScore(20)
 					setIndicator('health', 8)
 					setIndicator('friends', 6)
 					setCurrentQuestion('fimfaculdade')
@@ -619,6 +655,7 @@ function MainScreen() {
 			option3: {
 				text: 'Tentar arranjar um estágio',
 				consequence: () => {
+					setScore(20)
 					doWithProbability(0.4)
 						? setCurrentQuestion('estagioA')
 						: setCurrentQuestion('estagioB')
@@ -654,6 +691,7 @@ function MainScreen() {
 			questionText:
 				'A faculdade chegou ao fim. Agora está na hora de se tornar um adulto de verdade.',
 			consequence: () => {
+				setScore(21)
 				setAge(2)
 				setBackground(2)
 				setIndicator('health', 8)
@@ -841,6 +879,27 @@ function MainScreen() {
 			},
 		},
 		{
+			id: 'emprego1-2-bom',
+			questionText: 'A apresentação foi perfeita! Você impressionou seu chefe.',
+			consequence: () => {
+				setIndicator('health', 8)
+				setIndicator('friends', 3)
+				setCurrentQuestion('emprego1-3-1')
+			},
+			isAnnouncer: true,
+		},
+		{
+			id: 'emprego1-2-ruim',
+			questionText:
+				'Você acabou se embolando e a apresentação deixou a desejar...',
+			consequence: () => {
+				setIndicator('health', -8)
+				setIndicator('friends', -3)
+				setCurrentQuestion('emprego1-3-1')
+			},
+			isAnnouncer: true,
+		},
+		{
 			id: 'emprego1-2-1',
 			questionText:
 				'Chegou a hora da apresentação! Clique na tela para passar os slides no tempo certo, ou perderá a atenção da sua equipe!',
@@ -856,6 +915,7 @@ function MainScreen() {
 			option1: {
 				text: 'Ligar pro seu chefe fingindo que está doente',
 				consequence: () => {
+					setScore(23)
 					setCurrentQuestion(
 						doWithProbability(0.3) ? 'emprego1-3-ruim' : 'emprego1-3-bom'
 					)
@@ -864,6 +924,8 @@ function MainScreen() {
 			option2: {
 				text: 'Ir ao trabalho mesmo assim',
 				consequence: () => {
+					setScore(23)
+					setIndicator('money', 4000)
 					setIndicator('health', 6)
 					setCurrentQuestion('emprego1-3-honesto')
 				},
@@ -871,6 +933,8 @@ function MainScreen() {
 			option3: {
 				text: 'Ir ao trabalho, mas dizer que seu carro quebrou no caminho',
 				consequence: () => {
+					setScore(23)
+					setIndicator('money', 4000)
 					setCurrentQuestion(
 						doWithProbability(0.5) ? 'emprego1-3-ruim' : 'emprego1-3-bom'
 					)
@@ -1089,6 +1153,8 @@ function MainScreen() {
 			option1: {
 				text: 'Sim',
 				consequence: () => {
+					setScore(25)
+					setIndicator('money', 8000)
 					setIndicator('friends', 4)
 					setCurrentQuestion('emprego2-3')
 				},
@@ -1096,6 +1162,8 @@ function MainScreen() {
 			option2: {
 				text: 'Não',
 				consequence: () => {
+					setScore(25)
+					setIndicator('money', 8000)
 					setIndicator('friends', -3)
 					setCurrentQuestion('emprego2-3')
 				},
@@ -1160,6 +1228,8 @@ function MainScreen() {
 			option1: {
 				text: 'Sim',
 				consequence: () => {
+					setScore(27)
+					setIndicator('money', 9000)
 					setIndicator('education', 4)
 					setCurrentQuestion(
 						doWithProbability(0.6) ? 'emprego2-4-bom' : 'emprego2-4-ruim'
@@ -1169,6 +1239,8 @@ function MainScreen() {
 			option2: {
 				text: 'Não',
 				consequence: () => {
+					setScore(27)
+					setIndicator('money', 9000)
 					setCurrentQuestion('emprego2-4-nao')
 				},
 			},
@@ -1268,32 +1340,58 @@ function MainScreen() {
 		{
 			id: 'emprego2-6',
 			questionText:
-				'Você percebe um movimento no mercado que possivelmente retornará 50% de lucro sobre qualquer investimento. O que você faz?',
+				'Seu amigo te liga pedindo ajuda, ele precisa de $5.000. O que você faz?',
 			option1: {
-				text: 'Investe 10.000',
+				text: 'Aceita o pedido',
 				consequence: () => {
-					setIndicator('money', -10000)
+					setIndicator('money', -5000)
+					setIndicator('friends', 5)
 					setCurrentQuestion(
-						doWithProbability(0.6) ? 'emprego2-5-1' : 'emprego2-5-2'
+						doWithProbability(0.7) ? 'emprego2-6-1' : 'emprego2-7'
 					)
 				},
 			},
 			option2: {
-				text: 'Investe 5.000',
+				text: 'Não aceita o pedido',
 				consequence: () => {
-					setIndicator('money', -5000)
-					setCurrentQuestion(
-						doWithProbability(0.6) ? 'emprego2-5-1-1' : 'emprego2-5-2'
-					)
+					setIndicator('friends', -5)
+					setCurrentQuestion('emprego2-7')
 				},
 			},
-			option3: {
-				text: 'Não investe nada',
+		},
+		{
+			id: 'emprego2-6-1',
+			questionText:
+				'Você ajuda seu amigo e em troca ele te oferece uma vaga nova de emprego! Salário: $30.000 por ano',
+			option1: {
+				text: 'Aceitar',
 				consequence: () => {
-					setIndicator('health', -2)
-					setCurrentQuestion('emprego2-6')
+					setAge(age + 2)
+					setIndicator('money', 20000)
+					setIndicator('friends', 8)
+					setIndicator('health', 10)
+					setCurrentQuestion('emprego2-7')
 				},
 			},
+			option2: {
+				text: 'Recusar',
+				consequence: () => {
+					setAge(age + 2)
+					setIndicator('health', 4)
+					setIndicator('friends', -1)
+					setCurrentQuestion('emprego2-7')
+				},
+			},
+		},
+		{
+			id: 'emprego2-7',
+			questionText:
+				'Seu investimento deu errado. Mais sensatez da próxima vez...',
+			consequence: () => {
+				setIndicator('health', -10)
+				setCurrentQuestion('emprego2-6')
+			},
+			isAnnouncer: true,
 		},
 	]
 
@@ -1311,7 +1409,36 @@ function MainScreen() {
 
 	const createQuestionWithId = (id) => {
 		if (id === 'memorygame') {
-			return <MemoryGame moveAhead={() => setCurrentQuestion('5')} />
+			return (
+				<MemoryGame
+					moveAhead={(moves) => {
+						switch (moves) {
+							case 'A':
+								setIndicator('education', 8)
+								setIndicator('health', 8)
+								break
+							case 'B':
+								setIndicator('education', 5)
+								setIndicator('health', 4)
+								break
+							case 'C':
+								setIndicator('education', 1)
+								setIndicator('health', -4)
+								break
+							case 'D':
+								setIndicator('education', -4)
+								setIndicator('health', -8)
+								break
+							default:
+								setIndicator('education', -10)
+								setIndicator('health', -10)
+								break
+						}
+						setCurrentQuestion('4')
+					}}
+					handicap={studyAmount === 'none' ? [null] : [2, 7]}
+				/>
+			)
 		}
 
 		if (id === 'clickgame') {
@@ -1403,6 +1530,9 @@ function MainScreen() {
 			<a href='https://buxbank.com.br'>
 				<img class='buxlogo' src={buxlogo} alt='logo-bux' />
 			</a>
+			{!isLoading && currentQuestion !== 'titlescreen' ? (
+				<span class='idade'>{score} anos</span>
+			) : null}
 			{showUniDialog ? (
 				<Alert theme='danger' style={{ marginTop: '40px' }}>
 					Você não estudou o suficiente para isso...
@@ -1413,3 +1543,9 @@ function MainScreen() {
 }
 
 export default MainScreen
+
+//Tema: Saude, financeiro, educaçao,
+//Estratégia de Marketing: formais, informais, organico
+//Cor: Verde, Azul, Preto
+//Em qual empresa você se inspira? DrConsulta, Geekie,
+//AVG: Friends, health, education

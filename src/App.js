@@ -1,5 +1,4 @@
 import React from 'react'
-import { Button } from 'shards-react'
 import MainScreen from './screens/main'
 import './App.css'
 
