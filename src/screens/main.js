@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { Alert } from 'shards-react'
 import Question from 'components/questions'
 import Indicators from 'components/indicators'
 import Announcer from 'components/announcer'
@@ -12,6 +13,7 @@ import './main.css'
 
 function MainScreen() {
 	const [displayIndicators, setDisplayIndicators] = useState(false)
+	const [showUniDialog, setShowUniDialog] = useState(false)
 	const [background, setBackground] = useState(0)
 	const [isLoading, setIsLoading] = useState(false)
 	const [health, setHealth] = useState(80)
@@ -20,6 +22,7 @@ function MainScreen() {
 	const [friends, setFriends] = useState(50)
 	const [age, setAge] = useState(0)
 	const [currentQuestion, setCurrentQuestion] = useState('titlescreen')
+	const [major, setMajor] = useState('nocollege')
 	const [club, setClub] = useState('no')
 	const [livingSpace, setLivingSpace] = useState('parents')
 	const [partyType, setPartyType] = useState('parents50')
@@ -295,6 +298,8 @@ function MainScreen() {
 						setBackground(1)
 						setAge(1)
 						setCurrentQuestion('clickgame')
+					} else {
+						showDialog()
 					}
 				},
 			},
@@ -320,7 +325,7 @@ function MainScreen() {
 				consequence: () => {
 					setAge(1)
 					setBackground(2)
-					setCurrentQuestion('7')
+					setCurrentQuestion('naofacul')
 				},
 			},
 		},
@@ -392,24 +397,28 @@ function MainScreen() {
 			option1: {
 				text: 'Administração',
 				consequence: () => {
+					setMajor('adm')
 					friends < 85 ? setCurrentQuestion('10') : setCurrentQuestion('11')
 				},
 			},
 			option2: {
 				text: 'Engenharia',
 				consequence: () => {
+					setMajor('eng')
 					friends < 85 ? setCurrentQuestion('10') : setCurrentQuestion('11')
 				},
 			},
 			option3: {
 				text: 'Economia',
 				consequence: () => {
+					setMajor('econ')
 					friends < 85 ? setCurrentQuestion('10') : setCurrentQuestion('11')
 				},
 			},
 			option4: {
 				text: 'Humanas (História, Filosofia etc)',
 				consequence: () => {
+					setMajor('hum')
 					friends < 85 ? setCurrentQuestion('10') : setCurrentQuestion('11')
 				},
 			},
@@ -721,7 +730,7 @@ function MainScreen() {
 			consequence: () => {
 				setIndicator('health', 15)
 				setIndicator('friends', 8)
-				setCurrentQuestion('emprego2-1')
+				setCurrentQuestion('emprego1-1')
 			},
 			isAnnouncer: true,
 		},
@@ -1144,6 +1153,148 @@ function MainScreen() {
 			},
 			isAnnouncer: true,
 		},
+		{
+			id: 'emprego2-4',
+			questionText:
+				'Você teve uma nova ideia de negócio que pode melhorar a empresa. Quer tentar apresentar para o seu chefe?',
+			option1: {
+				text: 'Sim',
+				consequence: () => {
+					setIndicator('education', 4)
+					setCurrentQuestion(
+						doWithProbability(0.6) ? 'emprego2-4-bom' : 'emprego2-4-ruim'
+					)
+				},
+			},
+			option2: {
+				text: 'Não',
+				consequence: () => {
+					setCurrentQuestion('emprego2-4-nao')
+				},
+			},
+		},
+		{
+			id: 'emprego2-4-nao',
+			questionText: 'Perdeu uma boa oportunidade...',
+			consequence: () => {
+				setIndicator('health', -7)
+				setCurrentQuestion('emprego2-5')
+			},
+			isAnnouncer: true,
+		},
+		{
+			id: 'emprego2-4-bom',
+			questionText:
+				'Seu chefe adorou a ideia! Você foi promovido como recompensa. Novo salário: 19.000 por ano',
+			consequence: () => {
+				setIndicator('health', 10)
+				setIndicator('friends', 3)
+				setIndicator('money', 10000)
+				setCurrentQuestion('emprego2-5')
+			},
+			isAnnouncer: true,
+		},
+		{
+			id: 'emprego2-4-ruim',
+			questionText:
+				'Seu chefe não gostou muito da ideia, mas pelo menos reconheceu seu esforço...',
+			consequence: () => {
+				setIndicator('health', -2)
+				setIndicator('friends', 1)
+				setCurrentQuestion('emprego2-5')
+			},
+			isAnnouncer: true,
+		},
+		{
+			id: 'emprego2-5',
+			questionText:
+				'Você percebe um movimento no mercado que possivelmente retornará 50% de lucro sobre qualquer investimento. O que você faz?',
+			option1: {
+				text: 'Investe 10.000',
+				consequence: () => {
+					setIndicator('money', -10000)
+					setCurrentQuestion(
+						doWithProbability(0.6) ? 'emprego2-5-1' : 'emprego2-5-2'
+					)
+				},
+			},
+			option2: {
+				text: 'Investe 5.000',
+				consequence: () => {
+					setIndicator('money', -5000)
+					setCurrentQuestion(
+						doWithProbability(0.6) ? 'emprego2-5-1-1' : 'emprego2-5-2'
+					)
+				},
+			},
+			option3: {
+				text: 'Não investe nada',
+				consequence: () => {
+					setIndicator('health', -2)
+					setCurrentQuestion('emprego2-6')
+				},
+			},
+		},
+		{
+			id: 'emprego2-5-1',
+			questionText: 'Seu investimento deu certo, parabéns!',
+			consequence: () => {
+				setIndicator('health', 8)
+				setIndicator('money', 15000)
+				setCurrentQuestion('emprego2-6')
+			},
+			isAnnouncer: true,
+		},
+		{
+			id: 'emprego2-5-1-1',
+			questionText: 'Seu investimento deu certo, parabéns!',
+			consequence: () => {
+				setIndicator('health', 8)
+				setIndicator('money', 7500)
+				setCurrentQuestion('emprego2-6')
+			},
+			isAnnouncer: true,
+		},
+		{
+			id: 'emprego2-5-2',
+			questionText:
+				'Seu investimento deu errado. Mais sensatez da próxima vez...',
+			consequence: () => {
+				setIndicator('health', -10)
+				setCurrentQuestion('emprego2-6')
+			},
+			isAnnouncer: true,
+		},
+		{
+			id: 'emprego2-6',
+			questionText:
+				'Você percebe um movimento no mercado que possivelmente retornará 50% de lucro sobre qualquer investimento. O que você faz?',
+			option1: {
+				text: 'Investe 10.000',
+				consequence: () => {
+					setIndicator('money', -10000)
+					setCurrentQuestion(
+						doWithProbability(0.6) ? 'emprego2-5-1' : 'emprego2-5-2'
+					)
+				},
+			},
+			option2: {
+				text: 'Investe 5.000',
+				consequence: () => {
+					setIndicator('money', -5000)
+					setCurrentQuestion(
+						doWithProbability(0.6) ? 'emprego2-5-1-1' : 'emprego2-5-2'
+					)
+				},
+			},
+			option3: {
+				text: 'Não investe nada',
+				consequence: () => {
+					setIndicator('health', -2)
+					setCurrentQuestion('emprego2-6')
+				},
+			},
+		},
 	]
 
 	useEffect(() => {
@@ -1219,6 +1370,13 @@ function MainScreen() {
 		)
 	}
 
+	const showDialog = () => {
+		setShowUniDialog(true)
+		setTimeout(() => {
+			setShowUniDialog(false)
+		}, 2000)
+	}
+
 	return (
 		<div
 			class='root'
@@ -1245,6 +1403,11 @@ function MainScreen() {
 			<a href='https://buxbank.com.br'>
 				<img class='buxlogo' src={buxlogo} alt='logo-bux' />
 			</a>
+			{showUniDialog ? (
+				<Alert theme='danger' style={{ marginTop: '40px' }}>
+					Você não estudou o suficiente para isso...
+				</Alert>
+			) : null}
 		</div>
 	)
 }
