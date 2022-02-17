@@ -1,5 +1,6 @@
 {
   "name": "bux-game",
+  "homepage": "https://buxbank.com.br/buxlife",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
