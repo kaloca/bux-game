@@ -19,11 +19,13 @@ function MainScreen() {
 	const [health, setHealth] = useState(80)
 	const [education, setEducation] = useState(60)
 	const [money, setMoney] = useState(1000)
+	const [startupScore, setStartupScore] = useState(0)
 	const [studyAmount, setStudyAmount] = useState('')
 	const [friends, setFriends] = useState(50)
 	const [age, setAge] = useState(0)
 	const [score, setScore] = useState(15)
 	const [currentQuestion, setCurrentQuestion] = useState('titlescreen')
+	const [startupTheme, setStartupTheme] = useState('')
 	const [major, setMajor] = useState('nocollege')
 	const [club, setClub] = useState('no')
 	const [livingSpace, setLivingSpace] = useState('parents')
@@ -54,6 +56,13 @@ function MainScreen() {
 			default:
 				break
 		}
+	}
+
+	const decideStartupOutcome = (testScore) => {
+		const averageIndicators = (friends + health + education) / 30
+		const startupTotalScore = startupScore + averageIndicators
+
+		return 0.0004 * startupTotalScore ** 3
 	}
 
 	const decidePartyScenario = () => {
@@ -121,6 +130,7 @@ function MainScreen() {
 		setClub('no')
 		setLivingSpace('parents')
 		setMajor('nocollege')
+		setStartupScore(0)
 	}
 
 	const questions = [
@@ -249,7 +259,7 @@ function MainScreen() {
 		{
 			id: '4',
 			questionText:
-				'Finalmente chegaram as férias! Como você irar aproveitar todo esse tempo livre?',
+				'Finalmente chegaram as férias! Como você vai aproveitar esse tempo livre?',
 			option1: {
 				text: 'Arranjar um trabalho de verão',
 				consequence: () => {
@@ -261,7 +271,7 @@ function MainScreen() {
 				},
 			},
 			option2: {
-				text: 'Estudando para o vestibular',
+				text: 'Estudar para o vestibular',
 				consequence: () => {
 					setScore(16)
 					setIndicator('education', 10)
@@ -376,7 +386,7 @@ function MainScreen() {
 				},
 			},
 			option2: {
-				text: 'Alugar um apartamento com seus amigos ($1000 até o fim da faculdade)',
+				text: 'Alugar um apartamento com seus amigos ($1.000 até o fim da faculdade)',
 				consequence: () => {
 					setIndicator('money', -1000)
 					setIndicator('health', 10)
@@ -386,7 +396,7 @@ function MainScreen() {
 				},
 			},
 			option3: {
-				text: 'Alugar um apartamento sozinho próximo a faculdade ($3000)',
+				text: 'Alugar um apartamento sozinho próximo a faculdade ($3.000)',
 				consequence: () => {
 					setIndicator('money', -3000)
 					setIndicator('health', 20)
@@ -402,7 +412,7 @@ function MainScreen() {
 			questionText:
 				'Qual meio de transporte você vai querer utilizar para ir estudar?',
 			option1: {
-				text: 'Comprar um carro. ($3000)',
+				text: 'Comprar um carro. ($3.000)',
 				consequence: () => {
 					setIndicator('money', -3000)
 					setIndicator('health', 10)
@@ -460,7 +470,7 @@ function MainScreen() {
 		{
 			id: '10',
 			questionText:
-				'Você viu muitas pessoas entrando em clubes, mas não tem amigos em nenhum. O que quer fazer?',
+				'Você viu muitas pessoas se inscrevendo em extracurriculares, mas não tem amigos em nenhum. O que quer fazer?',
 			option1: {
 				text: 'Tentar entrar no clube de teatro',
 				consequence: () => {
@@ -568,7 +578,7 @@ function MainScreen() {
 				},
 			},
 			option3: {
-				text: 'Sim, mas ir com calma',
+				text: 'Sim, mas ir com calma ($150)',
 				consequence: () => {
 					setIndicator('health', 5)
 					setIndicator('friends', 4)
@@ -653,7 +663,7 @@ function MainScreen() {
 				},
 			},
 			option3: {
-				text: 'Tentar arranjar um estágio',
+				text: 'Tentar arranjar um estágio salariado',
 				consequence: () => {
 					setScore(20)
 					doWithProbability(0.4)
@@ -703,7 +713,7 @@ function MainScreen() {
 		{
 			id: 'buscaporempregos',
 			questionText:
-				'A busca por empregos começa.  Você consegue uma entrevista, mas um dia antes recebe uma ligação de um amigo dizendo ter uma oportunidade de negócios. O que vai fazer?',
+				'A busca por empregos começa.  Você consegue uma entrevista, mas um dia antes recebe uma ligação de um amigo te chamando pra fundar uma empresa juntos. O que vai fazer?',
 			option1: {
 				text: 'Ir para a entrevista',
 				consequence: () => {
@@ -720,15 +730,137 @@ function MainScreen() {
 					setCurrentQuestion('amigo-startup')
 				},
 			},
-			option3: {
-				text: 'Esperar para entrevistas melhores',
+			// option3: {
+			// 	text: 'Esperar para entrevistas melhores',
+			// 	consequence: () => {
+			// 		doWithProbability(0.3)
+			// 			? setCurrentQuestion('deumerda')
+			// 			: setCurrentQuestion('deubom')
+			// 	},
+			// },
+		},
+		{
+			id: 'amigo-startup',
+			questionText:
+				'Bem-vindo ao mundo do empreendedorismo! Embora extremamente arriscado, pode trazer muitas recompensas! Qual área você escolhe para seu negócio?',
+			option1: {
+				text: 'Saúde (healthTech)',
 				consequence: () => {
-					doWithProbability(0.3)
-						? setCurrentQuestion('deumerda')
-						: setCurrentQuestion('deubom')
+					setStartupScore(5)
+					setStartupTheme('health')
+					setCurrentQuestion('startup-2')
+				},
+			},
+			option2: {
+				text: 'Finanças (finTech)',
+				consequence: () => {
+					setStartupScore(10)
+					setStartupTheme('finance')
+					setCurrentQuestion('startup-2')
+				},
+			},
+			option3: {
+				text: 'Educação (edTech)',
+				consequence: () => {
+					setStartupScore(0)
+					setStartupTheme('education')
+					setCurrentQuestion('startup-2')
 				},
 			},
 		},
+		{
+			id: 'startup-2',
+			questionText:
+				'Muito legal! Qual cor você quer que seja a principal da sua empresa?',
+			option1: {
+				text: 'Verde',
+				consequence: () => {
+					setCurrentQuestion('startup-3')
+				},
+			},
+			option2: {
+				text: 'Azul',
+				consequence: () => {
+					setStartupScore(startupScore + 5)
+					setCurrentQuestion('startup-3')
+				},
+			},
+			option3: {
+				text: 'Preto',
+				consequence: () => {
+					setStartupScore(startupScore + 10)
+					setCurrentQuestion('startup-3')
+				},
+			},
+		},
+		{
+			id: 'startup-3',
+			questionText: 'Muito legal! Qual vai ser sua estratégia de marketing?',
+			option1: {
+				text: 'TV, revistas e outdoors',
+				consequence: () => {
+					setStartupScore(startupScore + 5)
+					setCurrentQuestion('startup-4')
+				},
+			},
+			option2: {
+				text: 'Redes sociais',
+				consequence: () => {
+					setStartupScore(startupScore + 10)
+					setCurrentQuestion('startup-4')
+				},
+			},
+			option3: {
+				text: 'Esquema de pirâmide',
+				consequence: () => {
+					setCurrentQuestion('startup-4')
+				},
+			},
+		},
+		{
+			id: 'startup-4',
+			questionText: 'Em qual empresa você se inspira?',
+			option1: {
+				text: 'Nubank',
+				consequence: () => {
+					if (
+						startupTheme === 'finance'
+							? setStartupScore(startupScore + 10)
+							: null
+					)
+						setCurrentQuestion('startup-3')
+				},
+			},
+			option2: {
+				text: 'Dr. Consulta',
+				consequence: () => {
+					if (
+						startupTheme === 'health'
+							? setStartupScore(startupScore + 10)
+							: null
+					)
+						setCurrentQuestion('startup-3')
+				},
+			},
+			option3: {
+				text: 'Geekie',
+				consequence: () => {
+					if (
+						startupTheme === 'education'
+							? setStartupScore(startupScore + 10)
+							: null
+					)
+						setCurrentQuestion('startup-3')
+				},
+			},
+		},
+
+		//Tema: Saude 5, financeiro 10, educaçao 0,
+		//
+		//Estratégia de Marketing: formais 5, informais 10, organico 0
+		//Cor: Verde 0, Azul 5, Preto 10
+		//Em qual empresa você se inspira? DrConsulta, Geekie, 10 ou 0
+		//AVG: Friends, health, education 10
 		{
 			id: 'entrevista',
 			questionText:
@@ -768,6 +900,7 @@ function MainScreen() {
 			consequence: () => {
 				setIndicator('health', 15)
 				setIndicator('friends', 8)
+				setIndicator('money', 7500)
 				setCurrentQuestion('emprego1-1')
 			},
 			isAnnouncer: true,
@@ -859,14 +992,18 @@ function MainScreen() {
 				consequence: () => {
 					setIndicator('health', -5)
 					setIndicator('education', 2)
-					setCurrentQuestion('emprego1-2-1')
+					setCurrentQuestion(
+						doWithProbability(0.8) ? 'emprego1-2-bom' : 'emprego1-2-ruim'
+					)
 				},
 			},
 			option2: {
-				text: 'Jogar videogame a noite inteira e tentar a sorte',
+				text: 'Jogando videogame e tentar a sorte amanhã',
 				consequence: () => {
 					setIndicator('health', 6)
-					setCurrentQuestion('emprego1-2-1')
+					setCurrentQuestion(
+						doWithProbability(0.5) ? 'emprego1-2-bom' : 'emprego1-2-ruim'
+					)
 				},
 			},
 			option3: {
@@ -874,7 +1011,9 @@ function MainScreen() {
 				consequence: () => {
 					setIndicator('friends', 2)
 					setIndicator('health', 5)
-					setCurrentQuestion('emprego1-2-1')
+					setCurrentQuestion(
+						doWithProbability(0.5) ? 'emprego1-2-bom' : 'emprego1-2-ruim'
+					)
 				},
 			},
 		},
@@ -944,7 +1083,7 @@ function MainScreen() {
 		{
 			id: 'emprego1-3-bom',
 			questionText:
-				'Ufa, seu chefe não desconfiou da mentira. Melhor que isso não aconteca de novo!',
+				'Ufa, seu chefe não desconfiou da mentira. Melhor que isso não aconteça de novo!',
 			consequence: () => {
 				setIndicator('health', 4)
 				setCurrentQuestion('emprego1-4-1')
@@ -997,7 +1136,7 @@ function MainScreen() {
 				consequence: () => {
 					setIndicator('friends', 3)
 					setCurrentQuestion(
-						doWithProbability(0.5) ? 'emprego1-4-amigo-oferta' : 'emprego2-1'
+						doWithProbability(0.5) ? 'emprego1-4-amigo-oferta' : 'emprego2-2'
 					)
 				},
 			},

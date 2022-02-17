@@ -1,3 +1,6 @@
+[class*='primary'] { background-color: #5e5dd5; border-color: #5e5dd5; }
+
+
 .questionsContainer {
     display: flex;
     flex-direction: column;
@@ -33,17 +36,19 @@
 }
 
 #educationIcon {
-    color: #780abf;
+    color: #489ee6;
 }
 
 #healthIcon {
-    color: #6740cd;
+    color: #489ee6;
 }
 
 #friendsIcon {
-    color: #5771da;
+    color: #489ee6;
 }
 
 #moneyIcon {
-    color: #4a97e4;
+    color: #489ee6;
 }
+
+/* #489ee6 */

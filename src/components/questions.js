@@ -9,12 +9,14 @@ export default function Question(props) {
 			<div class='questionContainer'>
 				<div class='buttonContainer'>
 					<Button
+						pill
 						style={{ height: 'max-content' }}
 						onClick={props.option1.consequence}
 					>
 						{props.option1.text}
 					</Button>
 					<Button
+						pill
 						style={{ height: 'max-content' }}
 						onClick={props.option2.consequence}
 					>
@@ -22,6 +24,7 @@ export default function Question(props) {
 					</Button>
 					{props.option3 ? (
 						<Button
+							pill
 							style={{ height: 'max-content' }}
 							onClick={props.option3.consequence}
 						>
@@ -30,6 +33,7 @@ export default function Question(props) {
 					) : null}
 					{props.fourthQuestion ? (
 						<Button
+							pill
 							style={{ height: '5vh', overflow: 'auto' }}
 							onClick={props.option4.consequence}
 						>
