@@ -9,9 +9,7 @@ export default function Announcer(props) {
 				{props.text}
 			</header>
 			{props.isTitle ? (
-				<span class='subtitle'>
-					Quão rápido você consegue chegar a $100.000?
-				</span>
+				<span class='subtitle'>Com quanto dinheiro você vai se aposentar?</span>
 			) : null}
 			<Button onClick={props.consequence}>
 				{props.buttonText || 'Continuar'}

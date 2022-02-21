@@ -10,11 +10,12 @@ import { backdrops } from 'assets/backdrops'
 import MemoryGame from '../minigames/memory/App'
 import ClickGame from '../minigames/clickgame/ClickGame'
 import './main.css'
+import EndScreen from 'components/endscreen'
 
 function MainScreen() {
 	const [displayIndicators, setDisplayIndicators] = useState(false)
 	const [showUniDialog, setShowUniDialog] = useState(false)
-	const [background, setBackground] = useState(0)
+	const [background, setBackground] = useState(4)
 	const [isLoading, setIsLoading] = useState(false)
 	const [health, setHealth] = useState(80)
 	const [education, setEducation] = useState(60)
@@ -26,6 +27,7 @@ function MainScreen() {
 	const [score, setScore] = useState(15)
 	const [currentQuestion, setCurrentQuestion] = useState('titlescreen')
 	const [startupTheme, setStartupTheme] = useState('')
+	const [pyramidScheme, setPyramidScheme] = useState(false)
 	const [major, setMajor] = useState('nocollege')
 	const [club, setClub] = useState('no')
 	const [livingSpace, setLivingSpace] = useState('parents')
@@ -62,7 +64,13 @@ function MainScreen() {
 		const averageIndicators = (friends + health + education) / 30
 		const startupTotalScore = startupScore + averageIndicators
 
-		return 0.0004 * startupTotalScore ** 3
+		return (0.0004 * startupTotalScore ** 3) / 100
+	}
+
+	const endGame = () => {
+		setDisplayIndicators(false)
+		setCurrentQuestion('endscreen')
+		setBackground(3)
 	}
 
 	const decidePartyScenario = () => {
@@ -124,7 +132,7 @@ function MainScreen() {
 		setMoney(1000)
 		setFriends(50)
 		setAge(0)
-		setBackground(0)
+		setBackground(4)
 		setDisplayIndicators(false)
 		setScore(15)
 		setClub('no')
@@ -140,6 +148,8 @@ function MainScreen() {
 			consequence: () => {
 				setDisplayIndicators(true)
 				setCurrentQuestion('etapa1')
+				setBackground(0)
+				/// endGame()
 			},
 			isTitle: true,
 			isAnnouncer: true,
@@ -800,6 +810,7 @@ function MainScreen() {
 				text: 'TV, revistas e outdoors',
 				consequence: () => {
 					setStartupScore(startupScore + 5)
+					setPyramidScheme(false)
 					setCurrentQuestion('startup-4')
 				},
 			},
@@ -807,12 +818,15 @@ function MainScreen() {
 				text: 'Redes sociais',
 				consequence: () => {
 					setStartupScore(startupScore + 10)
+					setPyramidScheme(false)
 					setCurrentQuestion('startup-4')
 				},
 			},
 			option3: {
 				text: 'Esquema de pirâmide',
 				consequence: () => {
+					setStartupScore(65)
+					setPyramidScheme(true)
 					setCurrentQuestion('startup-4')
 				},
 			},
@@ -823,12 +837,12 @@ function MainScreen() {
 			option1: {
 				text: 'Nubank',
 				consequence: () => {
-					if (
-						startupTheme === 'finance'
-							? setStartupScore(startupScore + 10)
-							: null
+					if (startupTheme === 'finance') setStartupScore(startupScore + 10)
+					setCurrentQuestion(
+						doWithProbability(decideStartupOutcome())
+							? 'startup-bom'
+							: 'startup-ruim'
 					)
-						setCurrentQuestion('startup-3')
 				},
 			},
 			option2: {
@@ -839,7 +853,11 @@ function MainScreen() {
 							? setStartupScore(startupScore + 10)
 							: null
 					)
-						setCurrentQuestion('startup-3')
+						setCurrentQuestion(
+							doWithProbability(decideStartupOutcome())
+								? 'startup-bom'
+								: 'startup-ruim'
+						)
 				},
 			},
 			option3: {
@@ -850,9 +868,36 @@ function MainScreen() {
 							? setStartupScore(startupScore + 10)
 							: null
 					)
-						setCurrentQuestion('startup-3')
+						setCurrentQuestion(
+							doWithProbability(decideStartupOutcome())
+								? 'startup-bom'
+								: 'startup-ruim'
+						)
 				},
 			},
+		},
+		{
+			id: 'startup-bom',
+			questionText:
+				'Sucesso! Após muito esforço, sua participação da empresa foi vendida por 20 milhões de reais. Já pode se aposentar tranquilamente!',
+			consequence: () => {
+				setIndicator('health', 100)
+				setIndicator('friends', 100)
+				setIndicator('money', 20000000)
+				setCurrentQuestion('endscreen')
+			},
+			isAnnouncer: true,
+		},
+		{
+			id: 'startup-ruim',
+			questionText:
+				'Infelizmente sua startup não deu certo... mas cabeça pra frente, isso é muito comum! ',
+			consequence: () => {
+				setIndicator('health', -15)
+				setIndicator('friends', -5)
+				setCurrentQuestion('naoemprego')
+			},
+			isAnnouncer: true,
 		},
 
 		//Tema: Saude 5, financeiro 10, educaçao 0,
@@ -921,7 +966,7 @@ function MainScreen() {
 				text: 'Tentar começar sua própria empresa',
 				consequence: () => {
 					setIndicator('health', -2)
-					setCurrentQuestion('startup-1')
+					setCurrentQuestion('amigo-startup')
 				},
 			},
 			option3: {
@@ -1401,7 +1446,7 @@ function MainScreen() {
 				setIndicator('health', 10)
 				setIndicator('friends', 3)
 				setIndicator('money', 10000)
-				setCurrentQuestion('emprego2-5')
+				setCurrentQuestion('emprego2-6')
 			},
 			isAnnouncer: true,
 		},
@@ -1442,7 +1487,7 @@ function MainScreen() {
 				text: 'Não investe nada',
 				consequence: () => {
 					setIndicator('health', -2)
-					setCurrentQuestion('emprego2-6')
+					setCurrentQuestion('endscreen')
 				},
 			},
 		},
@@ -1452,7 +1497,7 @@ function MainScreen() {
 			consequence: () => {
 				setIndicator('health', 8)
 				setIndicator('money', 15000)
-				setCurrentQuestion('emprego2-6')
+				setCurrentQuestion('endscreen')
 			},
 			isAnnouncer: true,
 		},
@@ -1462,7 +1507,7 @@ function MainScreen() {
 			consequence: () => {
 				setIndicator('health', 8)
 				setIndicator('money', 7500)
-				setCurrentQuestion('emprego2-6')
+				setCurrentQuestion('endscreen')
 			},
 			isAnnouncer: true,
 		},
@@ -1472,7 +1517,7 @@ function MainScreen() {
 				'Seu investimento deu errado. Mais sensatez da próxima vez...',
 			consequence: () => {
 				setIndicator('health', -10)
-				setCurrentQuestion('emprego2-6')
+				setCurrentQuestion('endscreen')
 			},
 			isAnnouncer: true,
 		},
@@ -1486,7 +1531,7 @@ function MainScreen() {
 					setIndicator('money', -5000)
 					setIndicator('friends', 5)
 					setCurrentQuestion(
-						doWithProbability(0.7) ? 'emprego2-6-1' : 'emprego2-7'
+						doWithProbability(0.7) ? 'emprego2-6-1' : 'emprego2-5'
 					)
 				},
 			},
@@ -1494,7 +1539,7 @@ function MainScreen() {
 				text: 'Não aceita o pedido',
 				consequence: () => {
 					setIndicator('friends', -5)
-					setCurrentQuestion('emprego2-7')
+					setCurrentQuestion('emprego2-5')
 				},
 			},
 		},
@@ -1509,7 +1554,7 @@ function MainScreen() {
 					setIndicator('money', 20000)
 					setIndicator('friends', 8)
 					setIndicator('health', 10)
-					setCurrentQuestion('emprego2-7')
+					setCurrentQuestion('emprego2-5')
 				},
 			},
 			option2: {
@@ -1518,19 +1563,9 @@ function MainScreen() {
 					setAge(age + 2)
 					setIndicator('health', 4)
 					setIndicator('friends', -1)
-					setCurrentQuestion('emprego2-7')
+					setCurrentQuestion('emprego2-5')
 				},
 			},
-		},
-		{
-			id: 'emprego2-7',
-			questionText:
-				'Seu investimento deu errado. Mais sensatez da próxima vez...',
-			consequence: () => {
-				setIndicator('health', -10)
-				setCurrentQuestion('emprego2-6')
-			},
-			isAnnouncer: true,
 		},
 	]
 
@@ -1582,6 +1617,25 @@ function MainScreen() {
 
 		if (id === 'clickgame') {
 			return <ClickGame moveAhead={() => setCurrentQuestion('7')} />
+		}
+
+		if (id === 'endscreen') {
+			if (localStorage.getItem('highScore') === undefined) {
+				localStorage.setItem('highScore', money)
+			} else if (parseInt(localStorage.getItem('highScore')) < money) {
+				localStorage.setItem('highScore', money)
+			}
+			return (
+				<EndScreen
+					money={money}
+					highScore={parseInt(localStorage.getItem('highScore'))}
+					consequence={() => {
+						localStorage.setItem('highScore', money)
+						resetStates()
+						setCurrentQuestion('titlescreen')
+					}}
+				/>
+			)
 		}
 
 		const question =
@@ -1669,7 +1723,9 @@ function MainScreen() {
 			<a href='https://buxbank.com.br'>
 				<img class='buxlogo' src={buxlogo} alt='logo-bux' />
 			</a>
-			{!isLoading && currentQuestion !== 'titlescreen' ? (
+			{!isLoading &&
+			currentQuestion !== 'titlescreen' &&
+			currentQuestion !== 'endscreen' ? (
 				<span class='idade'>{score} anos</span>
 			) : null}
 			{showUniDialog ? (

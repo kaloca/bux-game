@@ -1,0 +1,23 @@
+.endscreenContainer {
+    display: flex;
+    flex-direction: column;
+   /* // justify-content: center; */
+    align-items: center;
+    margin-top: 14vh;
+}
+
+.endscreenHeader {
+    margin-top: 5vh;
+    font-size: 5vh;
+    font-weight: bold;
+    color: white;
+    margin-bottom: 5vh;
+    max-width: 40vw;
+}
+
+.endscreenSubtitle {
+    font-size: 4vh;
+    color: white;
+    margin-bottom: 5vh;
+    max-width: 40vw;
+}
