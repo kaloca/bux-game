@@ -178,6 +178,26 @@ function MainScreen() {
 			buttonText: 'Recomeçar',
 		},
 		{
+			id: 'sadness',
+			questionText:
+				'Você está triste demais para sair da cama. Sua única salvação pode ser a terapia, que é cara...',
+			option1: {
+				text: 'Fazer terapia ($6.000)',
+				consequence: () => {
+					doWithProbability(0.5)
+						? setCurrentQuestion('17')
+						: setCurrentQuestion('18')
+				},
+			},
+			option2: {
+				text: 'Desistir de tudo',
+				consequence: () => {
+					resetStates()
+					setCurrentQuestion('titlescreen')
+				},
+			},
+		},
+		{
 			id: '1',
 			questionText:
 				'Um pouco antes das aulas começarem, você decide ir fazer algumas compras. Qual desses produtos você escolhe?',
@@ -972,9 +992,8 @@ function MainScreen() {
 			option3: {
 				text: 'Desistir de tudo',
 				consequence: () => {
-					doWithProbability(0.3)
-						? setCurrentQuestion('emprego1-1-2')
-						: setCurrentQuestion('emprego1-1-1')
+					resetStates()
+					setCurrentQuestion('titlescreen')
 				},
 			},
 		},
@@ -1570,6 +1589,9 @@ function MainScreen() {
 	]
 
 	useEffect(() => {
+		if (health < 30) {
+			setCurrentQuestion('sadness')
+		}
 		setIsLoading(true)
 		let timer = setTimeout(
 			() => setIsLoading(false),
