@@ -61,8 +61,8 @@ function MainScreen() {
 	}
 
 	const decideStartupOutcome = (testScore) => {
-		const averageIndicators = (friends + health + education) / 30
-		const startupTotalScore = startupScore + averageIndicators
+		const averageIndicators = (friends + health + education) / 300
+		const startupTotalScore = startupScore * 1.25 * averageIndicators
 
 		return (0.0004 * startupTotalScore ** 3) / 100
 	}
