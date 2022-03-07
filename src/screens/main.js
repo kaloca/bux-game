@@ -9,6 +9,8 @@ import { backdrops } from 'assets/backdrops'
 
 import MemoryGame from '../minigames/memory/App'
 import ClickGame from '../minigames/clickgame/ClickGame'
+import HighLow from '../minigames/highlow/highlow'
+
 import './main.css'
 import EndScreen from 'components/endscreen'
 
@@ -147,9 +149,7 @@ function MainScreen() {
 			questionText: 'BuxLife',
 			consequence: () => {
 				setDisplayIndicators(true)
-				setCurrentQuestion('etapa1')
-				setBackground(0)
-				/// endGame()
+				setCurrentQuestion('highlow')
 			},
 			isTitle: true,
 			isAnnouncer: true,
@@ -1601,7 +1601,7 @@ function MainScreen() {
 		return () => {
 			clearTimeout(timer)
 		} // setTimeout(setIsLoading(false), 3000)
-	}, [currentQuestion])
+	}, [currentQuestion, health])
 
 	const createQuestionWithId = (id) => {
 		if (id === 'memorygame') {
@@ -1658,6 +1658,10 @@ function MainScreen() {
 					}}
 				/>
 			)
+		}
+
+		if (id === 'highlow') {
+			return <HighLow moveAhead={() => setCurrentQuestion('7')} />
 		}
 
 		const question =

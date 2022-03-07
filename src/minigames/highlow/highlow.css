@@ -1,0 +1,39 @@
+.highlowContainer {
+    display: flex;
+    flex-direction: column;
+    /* // justify-content: center; */
+    align-items: center;
+    margin-top: 0vh;
+}
+
+.highlowHeader {
+    margin-top: 20vh;
+    font-size: 3vh;
+    color: white;
+    /* margin-bottom: 5vh; */
+    max-width: 40vw;
+}
+
+.highlowbuttoncontainer {
+    display: flex;
+    flex-direction: row;
+    /* background-color: white; */
+    width: 12vw;
+    justify-content: space-between;
+}
+
+.highlowNumber {
+    font-size: 8vh;
+    font-weight: bolder;
+    color: white;
+    margin-top: 3vh;
+    margin-bottom: 3vh;
+}
+
+.highlownumberfail {
+    font-size: 8vh;
+    font-weight: bolder;
+    color: red;
+    margin-top: 3vh;
+    margin-bottom: 3vh;
+}
