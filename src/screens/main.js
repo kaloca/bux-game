@@ -1586,6 +1586,16 @@ function MainScreen() {
 				},
 			},
 		},
+		{
+			id: 'negotiationsuccess',
+			questionText:
+				'Você conseguiu convencer seu chefe a aumentar seu salário!',
+			consequence: () => {
+				setIndicator('health', 8)
+				setCurrentQuestion('emprego2-1')
+			},
+			isAnnouncer: true,
+		},
 	]
 
 	useEffect(() => {
@@ -1661,7 +1671,18 @@ function MainScreen() {
 		}
 
 		if (id === 'highlow') {
-			return <HighLow moveAhead={() => setCurrentQuestion('7')} />
+			return (
+				<HighLow
+					moveAhead={() => setCurrentQuestion('7')}
+					playHighLowAgain={() => {
+						setIndicator('health', -5)
+						setIndicator('friends', -5)
+					}}
+					winNegotiation={() => {
+						setCurrentQuestion('negotiationsuccess')
+					}}
+				/>
+			)
 		}
 
 		const question =

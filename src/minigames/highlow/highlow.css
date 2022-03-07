@@ -22,6 +22,14 @@
     justify-content: space-between;
 }
 
+.highlowbuttoncontainer2 {
+    display: flex;
+    flex-direction: column;
+    /* background-color: white; */
+    height: 12vh;
+    justify-content: space-between;
+}
+
 .highlowNumber {
     font-size: 8vh;
     font-weight: bolder;
