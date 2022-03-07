@@ -149,7 +149,7 @@ function MainScreen() {
 			questionText: 'BuxLife',
 			consequence: () => {
 				setDisplayIndicators(true)
-				setCurrentQuestion('highlow')
+				setCurrentQuestion('clickgame')
 			},
 			isTitle: true,
 			isAnnouncer: true,
