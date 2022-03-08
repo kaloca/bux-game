@@ -1,39 +1,60 @@
 .root {
-    background-color: rgb(1, 72, 72);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
+	background-color: rgb(1, 72, 72);
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 100%;
 }
 
 .loadinggif {
-    width: 16vw;
-    margin-top: 15vh;
+	width: 50vw;
+	margin-top: 15vh;
+}
+
+@media screen and (min-width: 700px) {
+	.loadinggif {
+		width: 16vw;
+	}
 }
 
 .div {
-    background: rgb(0, 0, 0);
-    background: transparent\9;
-    background: rgba(0, 0, 0, 0.4);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#66000000, endColorstr=#66000000);
-    zoom: 1;
+	background: rgb(0, 0, 0);
+	background: transparent\9;
+	background: rgba(0, 0, 0, 0.4);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#66000000, endColorstr=#66000000);
+	zoom: 1;
 }
 
 .root:nth-child(n) {
-    filter: none;
+	filter: none;
 }
 
 .buxlogo {
-    width: 130px;
-    position: absolute;
-    top: 1.2vh;
-    left: 1vw;
+	width: 130px;
+	position: absolute;
+	top: 1.2vh;
+	left: 1vw;
 }
 
 .idade {
-    color: white;
-    font-weight: bold;
-    font-size: 1vw;
-    margin-top: 5vh;
+	color: white;
+	font-weight: bold;
+	font-size: 1vw;
+	margin-top: 5vh;
+}
+
+@media screen and (max-width: 500px) {
+	.buxlogo {
+		top: 12px;
+		left: 6px;
+		width: 110px;
+	}
+	.headerBar {
+		position: absolute;
+		width: 100vw;
+		height: 75px;
+		background-color: white;
+		/* opacity: 0.5; */
+	}
 }

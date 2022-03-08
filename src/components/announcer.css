@@ -4,28 +4,56 @@
    /* // justify-content: center; */
     align-items: center;
     margin-top: 14vh;
+    /* background-color: white; */
 }
 
 .announcerHeader {
     margin-top: 14vh;
-    font-size: 4vh;
+    font-size: 8vw;
     color: white;
     margin-bottom: 5vh;
-    max-width: 40vw;
+    width: 80vw;
+    /* max-width: 500px; */
 }
 
 .titleScreenHeader {
     margin-top: 5vh;
-    font-size: 10vh;
+    font-size: 20vw;
     font-weight: bold;
     color: white;
     margin-bottom: 5vh;
-    max-width: 40vw;
+    /* //max-width: 40vw; */
 }
 
 .subtitle {
-    font-size: 4vh;
+    font-size: 6vw;
     color: white;
     margin-bottom: 5vh;
-    max-width: 40vw;
+    /* max-width: 40vw; */
 }
+
+@media screen and (min-width: 500px) and (max-width: 999px) {
+    .titleScreenHeader {
+       font-size: 9vh;
+    }
+    .subtitle {
+        font-size: 3vh;
+    }
+    .announcerHeader {
+        font-size: 3.5vh;
+    }
+  }
+
+@media screen and (min-width: 1000px) {
+    .titleScreenHeader {
+       font-size: 12vh;
+    }
+    .subtitle {
+        font-size: 4vh;
+    }
+    .announcerHeader {
+        font-size: 4vh;
+        width: 40vw;
+    }
+    
+  }

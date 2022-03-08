@@ -11,29 +11,56 @@
 
 .button {
     /* width: 10%; */
-    height: 5vh;
+    /* height: 8vh; */
 }
 
 .buttonContainer {
-    height: 22vh;
-    min-width: 20vw;
+    /* min-height: 22vh;
+    max-height: 30vh; */
+    width: 60vw;
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
+    justify-content: space-between;
+    /* background-color: white; */
 }
 
-.header {
+.questionheader {
     margin-top: 20vh;
-    font-size: 3vh;
+    font-size: 5.6vw;
     color: white;
     margin-bottom: 5vh;
-    max-width: 40vw;
+    max-width: 80vw;
 }
 
 .questionContainer {
-    width: 30vw;
+    /* width: 30vw; */
     margin-top: 0vh;
 }
+
+
+@media screen and (min-width: 500px) and (max-width: 999px) {
+    .questionheader {
+       font-size: 3vh;
+       max-width: 60vw;
+    }
+    .buttonContainer {
+        min-width: 35vw;
+        max-width: 43vw;
+    }
+  }
+
+@media screen and (min-width: 1000px) {
+    .questionheader {
+       font-size: 3vh;
+       max-width: 40vw;
+    }
+    .buttonContainer {
+        min-width: 20vw;
+        max-width: 28vw;
+    }
+    
+    
+  }
 
 #educationIcon {
     color: #489ee6;

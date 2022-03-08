@@ -149,7 +149,7 @@ function MainScreen() {
 			questionText: 'BuxLife',
 			consequence: () => {
 				setDisplayIndicators(true)
-				setCurrentQuestion('clickgame')
+				setCurrentQuestion('etapa1')
 			},
 			isTitle: true,
 			isAnnouncer: true,
@@ -1767,6 +1767,7 @@ function MainScreen() {
 			{isLoading ? (
 				<img class='loadinggif' src={loading} alt='loadingGif' />
 			) : null}
+			<div class='headerBar'></div>
 			<a href='https://buxbank.com.br'>
 				<img class='buxlogo' src={buxlogo} alt='logo-bux' />
 			</a>

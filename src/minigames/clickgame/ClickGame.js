@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import ScriptTag from 'react-script-tag'
+// import ScriptTag from 'react-script-tag'
 import { Button, Progress } from 'shards-react'
 import './clickgame.css'
 
@@ -26,9 +26,8 @@ export default function ClickGame(props) {
 						Começar
 					</Button>
 				</div>
-			) : (
-				<ScriptTag type='text/javascript' src='clickGameP5.js' />
-			)}
+			) : //<ScriptTag type='text/javascript' src='clickGameP5.js' />
+			null}
 		</>
 	)
 }

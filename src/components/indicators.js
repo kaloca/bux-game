@@ -8,7 +8,7 @@ import './indicators.css'
 
 export default function Indicators(props) {
 	return (
-		<div class='Container'>
+		<div class='indicatorContainer'>
 			<div class='indicatorDiv'>
 				<GiBrain class='indicatorIcon' id='educationIcon' />
 				<span class='indicatorText'>{props.education}%</span>
