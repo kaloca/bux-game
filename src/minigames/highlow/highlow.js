@@ -23,7 +23,10 @@ export default function HighLow(props) {
 		) {
 			setNumber(next)
 			setMoves(moves + 1)
-		} else setFail(true)
+		} else {
+			setNumber(next)
+			setFail(true)
+		}
 	}
 
 	useEffect(() => {
@@ -33,8 +36,8 @@ export default function HighLow(props) {
 	return (
 		<div class='highlowContainer'>
 			<header class='highlowHeader'>
-				Adivinhe 5 vezes entre maior ou menor para aumentar seu salário. Os
-				números variam de 1 a 11.
+				Adivinhe 5 vezes se o próximo número vai ser maior ou menor do que esse
+				para aumentar seu salário. Os números variam de 1 a 11.
 			</header>
 			<span class={fail ? 'highlownumberfail' : 'highlowNumber'}>{number}</span>
 			{!fail ? (

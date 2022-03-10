@@ -44,17 +44,18 @@
 	margin-top: 5vh;
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 600px) {
 	.buxlogo {
-		top: 12px;
-		left: 6px;
+		top: 12.5px;
+		left: 12px;
 		width: 110px;
 	}
 	.headerBar {
 		position: absolute;
 		width: 100vw;
 		height: 75px;
-		background-color: white;
+		background-color: #5e5dd5;
+		box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
 		/* opacity: 0.5; */
 	}
 }

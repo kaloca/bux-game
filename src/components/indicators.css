@@ -40,7 +40,7 @@
 
 @media screen and (max-width: 600px) {
 	.indicatorContainer {
-		margin-top: 70px;
+		margin-top: 80px;
 		/* background-color: white; */
 		width: 100vw;
 	}

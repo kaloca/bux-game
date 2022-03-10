@@ -174,9 +174,9 @@ export default function App(props) {
 						<span className='bold'>Movimentos:</span> {moves}
 					</div>
 				</div>
-				<Button onClick={props.moveAhead} color='primary' variant='contained'>
+				{/* <Button onClick={props.moveAhead} color='primary' variant='contained'>
 					Pular (dev)
-				</Button>
+				</Button> */}
 			</footer>
 			<Dialog
 				open={showModal}

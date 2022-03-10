@@ -26,7 +26,12 @@ export default function Indicators(props) {
 			</div>
 			<div class='indicatorDiv'>
 				<RiMoneyDollarCircleFill class='indicatorIcon' id='moneyIcon' />
-				<span class='indicatorText'>{props.money}$</span>
+				<span class='indicatorText'>
+					{props.money
+						.toLocaleString('pt-br', { minimumFractionDigits: 2 })
+						.slice(0, -3)}
+					$
+				</span>
 			</div>
 			{/* <Button
 				onClick={() => {

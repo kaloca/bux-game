@@ -5,6 +5,7 @@ import Indicators from 'components/indicators'
 import Announcer from 'components/announcer'
 import loading from 'assets/loading.gif'
 import buxlogo from 'assets/bux_370.png'
+import buxblack from 'assets/bux-white.webp'
 import { backdrops } from 'assets/backdrops'
 
 import MemoryGame from '../minigames/memory/App'
@@ -35,6 +36,18 @@ function MainScreen() {
 	const [livingSpace, setLivingSpace] = useState('parents')
 	const [partyType, setPartyType] = useState('parents50')
 	const [isDrunk, setIsDrunk] = useState(false)
+	const [width, setWidth] = useState(window.innerWidth)
+	const [previousCurrentQuestion, setPreviousCurrentQuestion] = useState('')
+
+	const handleResize = () => {
+		setWidth(window.innerWidth)
+	}
+	useEffect(() => {
+		window.addEventListener('resize', handleResize)
+		return () => {
+			window.removeEventListener('resize', handleResize)
+		}
+	}, [])
 
 	const doWithProbability = (n) => {
 		return !!n && Math.random() <= n
@@ -140,7 +153,9 @@ function MainScreen() {
 		setClub('no')
 		setLivingSpace('parents')
 		setMajor('nocollege')
+		setPyramidScheme(false)
 		setStartupScore(0)
+		setPreviousCurrentQuestion('')
 	}
 
 	const questions = [
@@ -161,6 +176,7 @@ function MainScreen() {
 			consequence: () => {
 				setDisplayIndicators(true)
 				setCurrentQuestion('1')
+				setBackground(0)
 			},
 			//isTitle: true,
 			isAnnouncer: true,
@@ -184,9 +200,9 @@ function MainScreen() {
 			option1: {
 				text: 'Fazer terapia ($6.000)',
 				consequence: () => {
-					doWithProbability(0.5)
-						? setCurrentQuestion('17')
-						: setCurrentQuestion('18')
+					setHealth(40)
+					setIndicator('money', -6000)
+					setCurrentQuestion(previousCurrentQuestion)
 				},
 			},
 			option2: {
@@ -196,6 +212,17 @@ function MainScreen() {
 					setCurrentQuestion('titlescreen')
 				},
 			},
+		},
+		{
+			id: 'terapiaerrado',
+			questionText:
+				'Infelizmente, a terapia deu errado. Você não aguenta mais...',
+			consequence: () => {
+				resetStates()
+				setCurrentQuestion('titlescreen')
+			},
+			isAnnouncer: true,
+			buttonText: 'Recomeçar',
 		},
 		{
 			id: '1',
@@ -400,6 +427,37 @@ function MainScreen() {
 					setScore(18)
 					setBackground(2)
 					setCurrentQuestion('naofacul')
+				},
+			},
+		},
+		{
+			id: 'naofacul',
+			questionText:
+				'Caminho arriscado, mas pelo menos agora você tem muito tempo livre. O que vai fazer?',
+			option1: {
+				text: 'Continuar morando com seus pais sem trabalhar',
+				consequence: () => {
+					setIndicator('health', -70)
+					setIndicator('friends', -5)
+					setIndicator('education', -15)
+					setCurrentQuestion('naotrabalhonaofacul')
+				},
+			},
+			option2: {
+				text: 'Fazer um curso técnico de 2 anos ($4000)',
+				consequence: () => {
+					setIndicator('money', -4000)
+					setIndicator('health', 5)
+					setIndicator('friends', 5)
+					setIndicator('education', 8)
+					setAge(2)
+					setCurrentQuestion('buscaporempregos')
+				},
+			},
+			option3: {
+				text: 'Tentar arranjar um emprego sem faculdade.',
+				consequence: () => {
+					setCurrentQuestion('buscaporempregosnaofacul')
 				},
 			},
 		},
@@ -748,8 +806,8 @@ function MainScreen() {
 				text: 'Ir para a entrevista',
 				consequence: () => {
 					setIndicator('friends', -3)
-					doWithProbability(0.8)
-						? setCurrentQuestion('entrevista')
+					doWithProbability((education / 3) ** 3)
+						? setCurrentQuestion('deubom')
 						: setCurrentQuestion('entrevista-fail')
 				},
 			},
@@ -768,6 +826,37 @@ function MainScreen() {
 			// 			: setCurrentQuestion('deubom')
 			// 	},
 			// },
+		},
+		{
+			id: 'buscaporempregosnaofacul',
+			questionText:
+				'Arranjar empregos sem faculdade é possível, mas difícil. Além disso, seu salário inicial não será tão alto.',
+			consequence: () => {
+				setAge(2)
+				setCurrentQuestion('buscaporempregosnaofacul2')
+			},
+			isAnnouncer: true,
+		},
+		{
+			id: 'buscaporempregosnaofacul2',
+			questionText:
+				'Após algumas tentativas, você finalmente consegue uma entrevista. Um dia antes dela acontecer, você recebe uma ligação de um amigo te chamando pra fundar uma empresa juntos. O que vai fazer?',
+			option1: {
+				text: 'Ir para a entrevista',
+				consequence: () => {
+					setIndicator('friends', -3)
+					doWithProbability(0.6)
+						? setCurrentQuestion('entrevista-semfacul')
+						: setCurrentQuestion('entrevista-fail')
+				},
+			},
+			option2: {
+				text: 'Ligar para o seu amigo e aceitar',
+				consequence: () => {
+					setIndicator('friends', 3)
+					setCurrentQuestion('amigo-startup')
+				},
+			},
 		},
 		{
 			id: 'amigo-startup',
@@ -857,6 +946,10 @@ function MainScreen() {
 			option1: {
 				text: 'Nubank',
 				consequence: () => {
+					if (pyramidScheme) {
+						setCurrentQuestion('pre-arrest')
+						return
+					}
 					if (startupTheme === 'finance') setStartupScore(startupScore + 10)
 					setCurrentQuestion(
 						doWithProbability(decideStartupOutcome())
@@ -868,33 +961,57 @@ function MainScreen() {
 			option2: {
 				text: 'Dr. Consulta',
 				consequence: () => {
-					if (
-						startupTheme === 'health'
-							? setStartupScore(startupScore + 10)
-							: null
+					if (pyramidScheme) {
+						setCurrentQuestion('pre-arrest')
+						return
+					}
+					if (startupTheme === 'health') setStartupScore(startupScore + 10)
+
+					setCurrentQuestion(
+						doWithProbability(decideStartupOutcome())
+							? 'startup-bom'
+							: 'startup-ruim'
 					)
-						setCurrentQuestion(
-							doWithProbability(decideStartupOutcome())
-								? 'startup-bom'
-								: 'startup-ruim'
-						)
 				},
 			},
 			option3: {
 				text: 'Geekie',
 				consequence: () => {
-					if (
-						startupTheme === 'education'
-							? setStartupScore(startupScore + 10)
-							: null
+					if (pyramidScheme) {
+						setCurrentQuestion('pre-arrest')
+						return
+					}
+					if (startupTheme === 'education') setStartupScore(startupScore + 10)
+
+					setCurrentQuestion(
+						doWithProbability(decideStartupOutcome())
+							? 'startup-bom'
+							: 'startup-ruim'
 					)
-						setCurrentQuestion(
-							doWithProbability(decideStartupOutcome())
-								? 'startup-bom'
-								: 'startup-ruim'
-						)
 				},
 			},
+		},
+		{
+			id: 'pre-arrest',
+			questionText:
+				'Sucesso! Após muito esforço, sua participação da empresa foi vendida por 20 milhões de reais. Já pode se aposentar tranquilamente!',
+			consequence: () => {
+				setIndicator('health', 100)
+				setIndicator('friends', 100)
+				setIndicator('money', 20000000)
+				setCurrentQuestion('arrest')
+			},
+			isAnnouncer: true,
+		},
+		{
+			id: 'arrest',
+			questionText:
+				'Mas... esquema de pirâmide é um crime gravíssimo! Você foi preso.',
+			consequence: () => {
+				setCurrentQuestion('titlescreen')
+				resetStates()
+			},
+			isAnnouncer: true,
 		},
 		{
 			id: 'startup-bom',
@@ -934,6 +1051,18 @@ function MainScreen() {
 				setIndicator('health', 6)
 				setIndicator('friends', 4)
 				setIndicator('money', 5000)
+				setCurrentQuestion('emprego1-1')
+			},
+			isAnnouncer: true,
+		},
+		{
+			id: 'entrevista-semfacul',
+			questionText:
+				'O pessoal da empresa gostou de você. Parabéns, conseguiu seu primeiro emprego! Salário: 5000 por ano',
+			consequence: () => {
+				setIndicator('health', 6)
+				setIndicator('friends', 4)
+				setIndicator('money', 2000)
 				setCurrentQuestion('emprego1-1')
 			},
 			isAnnouncer: true,
@@ -979,7 +1108,7 @@ function MainScreen() {
 					setIndicator('health', -10)
 					doWithProbability(0.2)
 						? setCurrentQuestion('deumerda')
-						: setCurrentQuestion('deubom')
+						: setCurrentQuestion('entrevista')
 				},
 			},
 			option2: {
@@ -1145,12 +1274,31 @@ function MainScreen() {
 			},
 		},
 		{
+			id: 'emprego1-negociar',
+			questionText:
+				'Já deu tempo o suficiente para você pedir um aumento pro seu chefe. Vale a pena o risco?',
+			option1: {
+				text: 'Sim',
+				consequence: () => {
+					setCurrentQuestion('highlow')
+				},
+			},
+			option2: {
+				text: 'Não',
+				consequence: () => {
+					setScore(27)
+					setIndicator('money', 9000)
+					setCurrentQuestion('emprego1-4-1')
+				},
+			},
+		},
+		{
 			id: 'emprego1-3-bom',
 			questionText:
 				'Ufa, seu chefe não desconfiou da mentira. Melhor que isso não aconteça de novo!',
 			consequence: () => {
 				setIndicator('health', 4)
-				setCurrentQuestion('emprego1-4-1')
+				setCurrentQuestion('emprego1-negociar')
 			},
 			isAnnouncer: true,
 		},
@@ -1161,7 +1309,7 @@ function MainScreen() {
 			consequence: () => {
 				setIndicator('health', -8)
 				setIndicator('friends', -6)
-				setCurrentQuestion('emprego1-4-1')
+				setCurrentQuestion('emprego1-negociar')
 			},
 			isAnnouncer: true,
 		},
@@ -1171,7 +1319,7 @@ function MainScreen() {
 				'Seu chefe não ficou tão bravo porque foi seu primeiro atraso. É só não fazer de novo...',
 			consequence: () => {
 				setIndicator('health', 2)
-				setCurrentQuestion('emprego1-4-1')
+				setCurrentQuestion('emprego1-negociar')
 			},
 			isAnnouncer: true,
 		},
@@ -1184,7 +1332,7 @@ function MainScreen() {
 				consequence: () => {
 					setIndicator('friends', 5)
 					setIndicator('health', 5)
-					setCurrentQuestion('emprego2-1')
+					setCurrentQuestion('emprego2-2')
 				},
 			},
 			option2: {
@@ -1192,7 +1340,7 @@ function MainScreen() {
 				consequence: () => {
 					setIndicator('health', -2)
 					setIndicator('friends', -5)
-					setCurrentQuestion('emprego2-1')
+					setCurrentQuestion('emprego2-2')
 				},
 			},
 			option3: {
@@ -1592,7 +1740,8 @@ function MainScreen() {
 				'Você conseguiu convencer seu chefe a aumentar seu salário!',
 			consequence: () => {
 				setIndicator('health', 8)
-				setCurrentQuestion('emprego2-1')
+				setCurrentQuestion('emprego1-4-1')
+				setIndicator('money', 5000)
 			},
 			isAnnouncer: true,
 		},
@@ -1600,6 +1749,7 @@ function MainScreen() {
 
 	useEffect(() => {
 		if (health < 30) {
+			setPreviousCurrentQuestion(currentQuestion)
 			setCurrentQuestion('sadness')
 		}
 		setIsLoading(true)
@@ -1673,7 +1823,7 @@ function MainScreen() {
 		if (id === 'highlow') {
 			return (
 				<HighLow
-					moveAhead={() => setCurrentQuestion('7')}
+					moveAhead={() => setCurrentQuestion('emprego1-4-1')}
 					playHighLowAgain={() => {
 						setIndicator('health', -5)
 						setIndicator('friends', -5)
@@ -1710,6 +1860,7 @@ function MainScreen() {
 					question={question.questionText}
 					option1={question.option1}
 					option2={question.option2}
+					width={width}
 				/>
 			)
 		}
@@ -1723,6 +1874,7 @@ function MainScreen() {
 					option3={question.option3}
 					fourthQuestion
 					option4={question.option4}
+					width={width}
 				/>
 			)
 		}
@@ -1733,6 +1885,7 @@ function MainScreen() {
 				option1={question.option1}
 				option2={question.option2}
 				option3={question.option3}
+				width={width}
 			/>
 		)
 	}
@@ -1769,18 +1922,23 @@ function MainScreen() {
 			) : null}
 			<div class='headerBar'></div>
 			<a href='https://buxbank.com.br'>
-				<img class='buxlogo' src={buxlogo} alt='logo-bux' />
+				<img
+					class='buxlogo'
+					src={width > 600 ? buxlogo : buxblack}
+					alt='logo-bux'
+				/>
 			</a>
-			{!isLoading &&
+			{/* {!isLoading &&
 			currentQuestion !== 'titlescreen' &&
 			currentQuestion !== 'endscreen' ? (
 				<span class='idade'>{score} anos</span>
-			) : null}
+			) : null} */}
 			{showUniDialog ? (
 				<Alert theme='danger' style={{ marginTop: '40px' }}>
 					Você não estudou o suficiente para isso...
 				</Alert>
 			) : null}
+			<div class='secretButton'>.</div>
 		</div>
 	)
 }
