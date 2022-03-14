@@ -75,7 +75,7 @@ function MainScreen() {
 		}
 	}
 
-	const decideStartupOutcome = (testScore) => {
+	const decideStartupOutcome = () => {
 		const averageIndicators = (friends + health + education) / 300
 		const startupTotalScore = startupScore * 1.25 * averageIndicators
 
@@ -232,7 +232,8 @@ function MainScreen() {
 				text: 'O novo Call of Duty',
 				consequence: () => {
 					setIndicator('money', -50)
-					setIndicator('health', 10)
+					setIndicator('health', 8)
+					setIndicator('education', -4)
 					setCurrentQuestion('2')
 				},
 			},
@@ -240,7 +241,7 @@ function MainScreen() {
 				text: 'Uma jaqueta nova',
 				consequence: () => {
 					setIndicator('money', -50)
-					setIndicator('friends', 15)
+					setIndicator('friends', 8)
 					setCurrentQuestion('2')
 				},
 			},
@@ -268,7 +269,7 @@ function MainScreen() {
 			option2: {
 				text: 'Mesa dos nerds',
 				consequence: () => {
-					setIndicator('friends', 7)
+					setIndicator('friends', 2)
 					setIndicator('education', 5)
 					setCurrentQuestion('3')
 				},
@@ -276,7 +277,8 @@ function MainScreen() {
 			option3: {
 				text: 'Mesa com um pessoal da sua sala',
 				consequence: () => {
-					setIndicator('health', 3)
+					setIndicator('health', 4)
+					setIndicator('friends', 2)
 					setCurrentQuestion('3')
 				},
 			},
@@ -298,7 +300,7 @@ function MainScreen() {
 				text: 'Ir para a festa e virar a note estudando',
 				consequence: () => {
 					setIndicator('friends', 5)
-					setIndicator('health', -10)
+					setIndicator('health', -13)
 					setStudyAmount('half')
 					setCurrentQuestion('memorygame')
 				},
@@ -308,7 +310,7 @@ function MainScreen() {
 				consequence: () => {
 					setStudyAmount('full')
 					setIndicator('friends', -10)
-					setIndicator('education', 10)
+					setIndicator('education', 8)
 					setCurrentQuestion('memorygame')
 				},
 			},
@@ -340,8 +342,9 @@ function MainScreen() {
 				text: 'Viajar com seus amigos',
 				consequence: () => {
 					setScore(16)
-					setIndicator('friends', 10)
-					setIndicator('health', 10)
+					setIndicator('friends', 8)
+					setIndicator('health', 7)
+					setIndicator('education', -4)
 					setIndicator('money', -300)
 					setCurrentQuestion('5')
 				},
@@ -352,13 +355,13 @@ function MainScreen() {
 			questionText:
 				'Com o vestibular chegando, você tem algumas opções para seguir:',
 			option1: {
-				text: 'Contratar um cursinho',
+				text: 'Contratar um cursinho ($1.000)',
 				consequence: () => {
 					if ((money) => 1000) {
 						setScore(17)
 						setIndicator('money', -1000)
-						setIndicator('friends', 3)
-						setIndicator('health', -2)
+						setIndicator('friends', 2)
+						setIndicator('health', -4)
 						setIndicator('education', 10)
 						setCurrentQuestion('6')
 					}
@@ -368,9 +371,9 @@ function MainScreen() {
 				text: 'Dedicar 3 horas diárias para estudar em casa',
 				consequence: () => {
 					setScore(17)
-					setIndicator('education', 10)
+					setIndicator('education', 9)
 					setIndicator('health', -10)
-					setIndicator('friends', 5)
+					setIndicator('friends', 1)
 					setCurrentQuestion('6')
 				},
 			},
@@ -380,6 +383,7 @@ function MainScreen() {
 					setScore(17)
 					setIndicator('friends', 10)
 					setIndicator('health', 8)
+					setIndicator('education', -3)
 					setCurrentQuestion('6')
 				},
 			},
@@ -477,7 +481,7 @@ function MainScreen() {
 				text: 'Alugar um apartamento com seus amigos ($1.000 até o fim da faculdade)',
 				consequence: () => {
 					setIndicator('money', -1000)
-					setIndicator('health', 10)
+					setIndicator('health', 8)
 					setIndicator('friends', 10)
 					setLivingSpace('friends')
 					setCurrentQuestion('8')
@@ -487,9 +491,9 @@ function MainScreen() {
 				text: 'Alugar um apartamento sozinho próximo a faculdade ($3.000)',
 				consequence: () => {
 					setIndicator('money', -3000)
-					setIndicator('health', 20)
-					setIndicator('education', 5)
-					setIndicator('friends', 5)
+					setIndicator('health', 15)
+					setIndicator('education', 2)
+					setIndicator('friends', -5)
 					setLivingSpace('alone')
 					setCurrentQuestion('8')
 				},
@@ -503,7 +507,7 @@ function MainScreen() {
 				text: 'Comprar um carro. ($3.000)',
 				consequence: () => {
 					setIndicator('money', -3000)
-					setIndicator('health', 10)
+					setIndicator('health', 8)
 					setCurrentQuestion('9')
 				},
 			},
@@ -511,14 +515,14 @@ function MainScreen() {
 				text: 'Ir de metrô ($200 até o fim da faculdade)',
 				consequence: () => {
 					setIndicator('money', -200)
-					setIndicator('health', -8)
+					setIndicator('health', -3)
 					setCurrentQuestion('9')
 				},
 			},
 			option3: {
 				text: 'Bicicleta ($0)',
 				consequence: () => {
-					setIndicator('health', 4)
+					setIndicator('health', -10)
 					setCurrentQuestion('9')
 				},
 			},
@@ -581,6 +585,8 @@ function MainScreen() {
 				text: 'Não fazer parte de nenhum clube',
 				consequence: () => {
 					setCurrentQuestion('15')
+					setIndicator('health', -8)
+					setIndicator('friends', -5)
 				},
 			},
 			option4: {
@@ -607,7 +613,7 @@ function MainScreen() {
 				text: 'Recusar o convite',
 				consequence: () => {
 					setIndicator('friends', -3)
-					setIndicator('health', -2)
+					setIndicator('health', -5)
 					setCurrentQuestion('15')
 				},
 			},
@@ -616,8 +622,8 @@ function MainScreen() {
 			id: '12',
 			questionText: 'Parabéns, você conseguiu entrar no clube!',
 			consequence: () => {
-				setIndicator('health', 8)
-				setIndicator('friends', 10)
+				setIndicator('health', 6)
+				setIndicator('friends', 8)
 				setCurrentQuestion('15')
 			},
 			isAnnouncer: true,
@@ -637,9 +643,9 @@ function MainScreen() {
 			id: '14',
 			questionText: 'Você entrou no coletivo político!',
 			consequence: () => {
-				setIndicator('health', 8)
-				setIndicator('friends', 8)
-				setIndicator('education', 4)
+				setIndicator('health', 7)
+				setIndicator('friends', 6)
+				setIndicator('education', 3)
 				setCurrentQuestion('15')
 			},
 			isAnnouncer: true,
@@ -661,7 +667,7 @@ function MainScreen() {
 				text: 'Não',
 				consequence: () => {
 					setIndicator('health', -10)
-					setIndicator('friends', -2)
+					setIndicator('friends', -7)
 					setCurrentQuestion('19')
 				},
 			},
@@ -669,7 +675,7 @@ function MainScreen() {
 				text: 'Sim, mas ir com calma ($150)',
 				consequence: () => {
 					setIndicator('health', 5)
-					setIndicator('friends', 4)
+					setIndicator('friends', 2)
 					setIndicator('money', -150)
 					setCurrentQuestion('19')
 				},
@@ -698,8 +704,8 @@ function MainScreen() {
 			option3: {
 				text: 'Comprar o ingresso pra ele',
 				consequence: () => {
-					setIndicator('health', -2)
-					setIndicator('friends', 10)
+					setIndicator('health', -4)
+					setIndicator('friends', 8)
 					setIndicator('money', -150)
 					setCurrentQuestion('19')
 				},
@@ -710,8 +716,8 @@ function MainScreen() {
 			questionText:
 				'Deu tudo certo e vocês dois conseguiram entrar. E ele ainda te presenteou um jantar depois!',
 			consequence: () => {
-				setIndicator('health', 8)
-				setIndicator('friends', 10)
+				setIndicator('health', 7)
+				setIndicator('friends', 6)
 				setIndicator('money', 20)
 				setCurrentQuestion('19')
 			},
@@ -721,7 +727,7 @@ function MainScreen() {
 			id: '18',
 			questionText: 'Vocês dois foram pegos e expulsos da festa',
 			consequence: () => {
-				setIndicator('health', -8)
+				setIndicator('health', -12)
 				setIndicator('friends', -6)
 				setCurrentQuestion('10')
 			},
@@ -736,8 +742,8 @@ function MainScreen() {
 				consequence: () => {
 					setScore(20)
 					setIndicator('education', 10)
-					setIndicator('health', -8)
-					setIndicator('friends', -5)
+					setIndicator('health', -12)
+					setIndicator('friends', -7)
 					setCurrentQuestion('fimfaculdade')
 				},
 			},
@@ -745,8 +751,9 @@ function MainScreen() {
 				text: 'Não estudar e aproveitar as amizades',
 				consequence: () => {
 					setScore(20)
-					setIndicator('health', 8)
+					setIndicator('health', 7)
 					setIndicator('friends', 6)
+					setIndicator('education', -5)
 					setCurrentQuestion('fimfaculdade')
 				},
 			},
@@ -792,8 +799,8 @@ function MainScreen() {
 				setScore(21)
 				setAge(2)
 				setBackground(2)
-				setIndicator('health', 8)
-				setIndicator('education', 10)
+				setIndicator('health', 6)
+				setIndicator('education', 5)
 				setCurrentQuestion('buscaporempregos')
 			},
 			isAnnouncer: true,
@@ -951,8 +958,14 @@ function MainScreen() {
 						return
 					}
 					if (startupTheme === 'finance') setStartupScore(startupScore + 10)
+					console.log(
+						'Outcome chances: ',
+						(major === 'adm' ? 0.15 : 0) + decideStartupOutcome()
+					)
 					setCurrentQuestion(
-						doWithProbability(decideStartupOutcome())
+						doWithProbability(
+							(major === 'adm' ? 0.15 : 0) + decideStartupOutcome()
+						)
 							? 'startup-bom'
 							: 'startup-ruim'
 					)
@@ -1046,11 +1059,11 @@ function MainScreen() {
 		{
 			id: 'entrevista',
 			questionText:
-				'O pessoal da empresa gostou de você. Parabéns, conseguiu seu primeiro emprego! Salário: 10000 por ano',
+				'O pessoal da empresa gostou de você. Parabéns, conseguiu seu primeiro emprego! Salário: $15.000 por ano',
 			consequence: () => {
 				setIndicator('health', 6)
 				setIndicator('friends', 4)
-				setIndicator('money', 5000)
+				setIndicator('money', 10000)
 				setCurrentQuestion('emprego1-1')
 			},
 			isAnnouncer: true,
@@ -1090,11 +1103,11 @@ function MainScreen() {
 		{
 			id: 'deubom',
 			questionText:
-				'Você conseguiu um dos melhores empregos possíveis para sua área de estudo! Salário: $15000 por ano',
+				'Você conseguiu um dos melhores empregos possíveis para sua área de estudo! Salário: $35000 por ano',
 			consequence: () => {
 				setIndicator('health', 15)
 				setIndicator('friends', 8)
-				setIndicator('money', 7500)
+				setIndicator('money', 17500)
 				setCurrentQuestion('emprego1-1')
 			},
 			isAnnouncer: true,
@@ -1365,12 +1378,13 @@ function MainScreen() {
 		},
 		{
 			id: 'oferta2',
-			questionText: 'Oferta: ',
+			questionText: 'Oferta: $25.000 por ano',
 			option1: {
 				text: 'Aceitar',
 				consequence: () => {
 					setIndicator('friends', 5)
 					setIndicator('health', 5)
+					setIndicator('money', 15000)
 					setCurrentQuestion('emprego2-1')
 				},
 			},
@@ -1608,11 +1622,11 @@ function MainScreen() {
 		{
 			id: 'emprego2-4-bom',
 			questionText:
-				'Seu chefe adorou a ideia! Você foi promovido como recompensa. Novo salário: 19.000 por ano',
+				'Seu chefe adorou a ideia! Você foi promovido como recompensa. Novo salário: 39.000 por ano',
 			consequence: () => {
 				setIndicator('health', 10)
 				setIndicator('friends', 3)
-				setIndicator('money', 10000)
+				setIndicator('money', 39000)
 				setCurrentQuestion('emprego2-6')
 			},
 			isAnnouncer: true,
@@ -1713,12 +1727,12 @@ function MainScreen() {
 		{
 			id: 'emprego2-6-1',
 			questionText:
-				'Você ajuda seu amigo e em troca ele te oferece uma vaga nova de emprego! Salário: $30.000 por ano',
+				'Você ajuda seu amigo e em troca ele te oferece uma vaga nova de emprego! Salário: $60.000 por ano',
 			option1: {
 				text: 'Aceitar',
 				consequence: () => {
 					setAge(age + 2)
-					setIndicator('money', 20000)
+					setIndicator('money', 60000)
 					setIndicator('friends', 8)
 					setIndicator('health', 10)
 					setCurrentQuestion('emprego2-5')
@@ -1749,7 +1763,8 @@ function MainScreen() {
 
 	useEffect(() => {
 		if (health < 30) {
-			setPreviousCurrentQuestion(currentQuestion)
+			if (currentQuestion !== 'sadness')
+				setPreviousCurrentQuestion(currentQuestion)
 			setCurrentQuestion('sadness')
 		}
 		setIsLoading(true)
