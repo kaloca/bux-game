@@ -1,0 +1,29 @@
+.lotteryContainer {
+	display: flex;
+	flex-direction: column;
+	/* // justify-content: center; */
+	align-items: center;
+	margin-top: 0vh;
+}
+
+.lotteryHeader {
+	margin-top: 20vh;
+	font-size: 3vh;
+	color: white;
+	width: 80vw;
+	/* margin-bottom: 5vh; */
+}
+
+@media screen and (min-width: 500px) and (max-width: 999px) {
+	.lotteryHeader {
+		font-size: 3vh;
+		max-width: 60vw;
+	}
+}
+
+@media screen and (min-width: 1000px) {
+	.lotteryHeader {
+		font-size: 3vh;
+		max-width: 40vw;
+	}
+}

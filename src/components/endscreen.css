@@ -1,23 +1,49 @@
 .endscreenContainer {
-    display: flex;
-    flex-direction: column;
-   /* // justify-content: center; */
-    align-items: center;
-    margin-top: 14vh;
+	display: flex;
+	flex-direction: column;
+	/* // justify-content: center; */
+	align-items: center;
+	margin-top: 14vh;
+	/* background-color: wheat; */
+	width: 80vw;
 }
 
 .endscreenHeader {
-    margin-top: 5vh;
-    font-size: 5vh;
-    font-weight: bold;
-    color: white;
-    margin-bottom: 5vh;
-    max-width: 40vw;
+	margin-top: 5vh;
+	font-size: 3.7vh;
+	font-weight: bold;
+	color: white;
+	margin-bottom: 5vh;
+	max-width: 'fit-content';
 }
 
 .endscreenSubtitle {
-    font-size: 4vh;
-    color: white;
-    margin-bottom: 5vh;
-    max-width: 40vw;
+	font-size: 3vh;
+	color: white;
+	margin-bottom: 5vh;
+	max-width: 80vw;
+}
+
+@media screen and (min-width: 500px) and (max-width: 1000px) {
+	.endscreenHeader {
+		font-size: 5vh;
+		max-width: 45vw;
+	}
+
+	.endscreenSubtitle {
+		font-size: 4vh;
+		max-width: 40vw;
+	}
+}
+
+@media screen and (min-width: 1000px) {
+	.endscreenHeader {
+		font-size: 5vh;
+		max-width: 40vw;
+	}
+
+	.endscreenSubtitle {
+		font-size: 4vh;
+		max-width: 40vw;
+	}
 }

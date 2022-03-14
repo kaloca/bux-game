@@ -11,6 +11,7 @@ import { backdrops } from 'assets/backdrops'
 import MemoryGame from '../minigames/memory/App'
 import ClickGame from '../minigames/clickgame/ClickGame'
 import HighLow from '../minigames/highlow/highlow'
+import Lottery from '../minigames/lottery/lottery'
 
 import './main.css'
 import EndScreen from 'components/endscreen'
@@ -28,10 +29,12 @@ function MainScreen() {
 	const [friends, setFriends] = useState(50)
 	const [age, setAge] = useState(0)
 	const [score, setScore] = useState(15)
+	const [honor, setHonor] = useState(false)
 	const [currentQuestion, setCurrentQuestion] = useState('titlescreen')
 	const [startupTheme, setStartupTheme] = useState('')
 	const [pyramidScheme, setPyramidScheme] = useState(false)
 	const [major, setMajor] = useState('nocollege')
+	const [college, setCollege] = useState('nocollege')
 	const [club, setClub] = useState('no')
 	const [livingSpace, setLivingSpace] = useState('parents')
 	const [partyType, setPartyType] = useState('parents50')
@@ -64,6 +67,12 @@ function MainScreen() {
 				else setEducation(education + value)
 				break
 			case 'money':
+				if (value > 0) {
+					if (honor) value *= 1.05
+					if (college === 'federal') value *= 1.2
+					if (college === 'particular') value *= 1.1
+					if (college === 'nocollege') value *= 1.05
+				}
 				setMoney(money + value)
 				break
 			case 'friends':
@@ -80,12 +89,6 @@ function MainScreen() {
 		const startupTotalScore = startupScore * 1.25 * averageIndicators
 
 		return (0.0004 * startupTotalScore ** 3) / 100
-	}
-
-	const endGame = () => {
-		setDisplayIndicators(false)
-		setCurrentQuestion('endscreen')
-		setBackground(3)
 	}
 
 	const decidePartyScenario = () => {
@@ -155,6 +158,8 @@ function MainScreen() {
 		setMajor('nocollege')
 		setPyramidScheme(false)
 		setStartupScore(0)
+		setCollege('nocollege')
+		setHonor(false)
 		setPreviousCurrentQuestion('')
 	}
 
@@ -393,12 +398,13 @@ function MainScreen() {
 			questionText:
 				'Parabéns, você se graduou na escola e já fez o vestibular. O que quer fazer de faculdade?',
 			option1: {
-				text: 'Universidade Federal (★★★★★)',
+				text: 'Universidade Federal (Salário: 120%)',
 				consequence: () => {
 					if (education >= 95) {
 						setBackground(1)
 						setScore(18)
 						setAge(1)
+						setCollege('federal')
 						setCurrentQuestion('7')
 					} else {
 						showDialog()
@@ -406,30 +412,33 @@ function MainScreen() {
 				},
 			},
 			option2: {
-				text: 'Universidade Particular ($20.000)(★★★★)',
+				text: 'Universidade Particular ($20.000)(Salário: 110%)',
 				consequence: () => {
 					setAge(1)
 					setScore(18)
 					setBackground(1)
+					setCollege('particular')
 					setIndicator('money', -20000)
 					setCurrentQuestion('7')
 				},
 			},
 			option3: {
-				text: 'Faculdade Pública (★★★)',
+				text: 'Faculdade Pública (Salário: 105%)',
 				consequence: () => {
 					setAge(1)
 					setScore(18)
 					setBackground(1)
+					setCollege('publica')
 					setCurrentQuestion('7')
 				},
 			},
 			option4: {
-				text: 'Não fazer faculdade (★)',
+				text: 'Não fazer faculdade (Salário: 100%)',
 				consequence: () => {
 					setAge(1)
 					setScore(18)
 					setBackground(2)
+					setCollege('nocollege')
 					setCurrentQuestion('naofacul')
 				},
 			},
@@ -552,7 +561,7 @@ function MainScreen() {
 				},
 			},
 			option4: {
-				text: 'Humanas (História, Filosofia etc)',
+				text: 'Humanas',
 				consequence: () => {
 					setMajor('hum')
 					friends < 85 ? setCurrentQuestion('10') : setCurrentQuestion('11')
@@ -744,7 +753,9 @@ function MainScreen() {
 					setIndicator('education', 10)
 					setIndicator('health', -12)
 					setIndicator('friends', -7)
-					setCurrentQuestion('fimfaculdade')
+					setCurrentQuestion(
+						education > 95 ? 'fimfaculdade-honra' : 'fimfaculdade'
+					)
 				},
 			},
 			option2: {
@@ -801,6 +812,21 @@ function MainScreen() {
 				setBackground(2)
 				setIndicator('health', 6)
 				setIndicator('education', 5)
+				setCurrentQuestion('buscaporempregos')
+			},
+			isAnnouncer: true,
+		},
+		{
+			id: 'fimfaculdade-honra',
+			questionText:
+				'Parabéns! Você se graduou da faculdade com honra. Agora está na hora de se tornar um adulto de verdade.',
+			consequence: () => {
+				setScore(21)
+				setAge(2)
+				setBackground(2)
+				setIndicator('health', 9)
+				setIndicator('education', 5)
+				setHonor(true)
 				setCurrentQuestion('buscaporempregos')
 			},
 			isAnnouncer: true,
@@ -901,20 +927,42 @@ function MainScreen() {
 			option1: {
 				text: 'Verde',
 				consequence: () => {
-					setCurrentQuestion('startup-3')
+					setCurrentQuestion('startup-x')
 				},
 			},
 			option2: {
 				text: 'Azul',
 				consequence: () => {
-					setStartupScore(startupScore + 5)
-					setCurrentQuestion('startup-3')
+					setCurrentQuestion('startup-x')
 				},
 			},
 			option3: {
 				text: 'Preto',
 				consequence: () => {
+					setCurrentQuestion('startup-x')
+				},
+			},
+		},
+		{
+			id: 'startup-x',
+			questionText: 'Onde você vai buscar capital para a empresa?',
+			option1: {
+				text: 'Amigos e família',
+				consequence: () => {
 					setStartupScore(startupScore + 10)
+					setCurrentQuestion('startup-3')
+				},
+			},
+			option2: {
+				text: 'Competição de Startups',
+				consequence: () => {
+					setCurrentQuestion('startup-3')
+				},
+			},
+			option3: {
+				text: 'Venture Capital',
+				consequence: () => {
+					setStartupScore(startupScore + 5)
 					setCurrentQuestion('startup-3')
 				},
 			},
@@ -988,7 +1036,7 @@ function MainScreen() {
 				},
 			},
 			option3: {
-				text: 'Geekie',
+				text: 'EnsinaFácil',
 				consequence: () => {
 					if (pyramidScheme) {
 						setCurrentQuestion('pre-arrest')
@@ -1059,11 +1107,11 @@ function MainScreen() {
 		{
 			id: 'entrevista',
 			questionText:
-				'O pessoal da empresa gostou de você. Parabéns, conseguiu seu primeiro emprego! Salário: $15.000 por ano',
+				'O pessoal da empresa gostou de você. Parabéns, conseguiu seu primeiro emprego! Salário: $25.000 por ano',
 			consequence: () => {
 				setIndicator('health', 6)
 				setIndicator('friends', 4)
-				setIndicator('money', 10000)
+				setIndicator('money', 17000)
 				setCurrentQuestion('emprego1-1')
 			},
 			isAnnouncer: true,
@@ -1071,11 +1119,11 @@ function MainScreen() {
 		{
 			id: 'entrevista-semfacul',
 			questionText:
-				'O pessoal da empresa gostou de você. Parabéns, conseguiu seu primeiro emprego! Salário: 5000 por ano',
+				'O pessoal da empresa gostou de você. Parabéns, conseguiu seu primeiro emprego! Salário: $12.000 por ano',
 			consequence: () => {
 				setIndicator('health', 6)
 				setIndicator('friends', 4)
-				setIndicator('money', 2000)
+				setIndicator('money', 8000)
 				setCurrentQuestion('emprego1-1')
 			},
 			isAnnouncer: true,
@@ -1103,11 +1151,11 @@ function MainScreen() {
 		{
 			id: 'deubom',
 			questionText:
-				'Você conseguiu um dos melhores empregos possíveis para sua área de estudo! Salário: $35000 por ano',
+				'Você conseguiu um dos melhores empregos possíveis para sua área de estudo! Salário: $35.000 por ano',
 			consequence: () => {
 				setIndicator('health', 15)
 				setIndicator('friends', 8)
-				setIndicator('money', 17500)
+				setIndicator('money', 22500)
 				setCurrentQuestion('emprego1-1')
 			},
 			isAnnouncer: true,
@@ -1229,7 +1277,7 @@ function MainScreen() {
 			consequence: () => {
 				setIndicator('health', 8)
 				setIndicator('friends', 3)
-				setCurrentQuestion('emprego1-3-1')
+				setCurrentQuestion('lottery')
 			},
 			isAnnouncer: true,
 		},
@@ -1240,7 +1288,7 @@ function MainScreen() {
 			consequence: () => {
 				setIndicator('health', -8)
 				setIndicator('friends', -3)
-				setCurrentQuestion('emprego1-3-1')
+				setCurrentQuestion('lottery')
 			},
 			isAnnouncer: true,
 		},
@@ -1270,7 +1318,7 @@ function MainScreen() {
 				text: 'Ir ao trabalho mesmo assim',
 				consequence: () => {
 					setScore(23)
-					setIndicator('money', 4000)
+					setIndicator('money', 10000)
 					setIndicator('health', 6)
 					setCurrentQuestion('emprego1-3-honesto')
 				},
@@ -1279,7 +1327,7 @@ function MainScreen() {
 				text: 'Ir ao trabalho, mas dizer que seu carro quebrou no caminho',
 				consequence: () => {
 					setScore(23)
-					setIndicator('money', 4000)
+					setIndicator('money', 10000)
 					setCurrentQuestion(
 						doWithProbability(0.5) ? 'emprego1-3-ruim' : 'emprego1-3-bom'
 					)
@@ -1300,7 +1348,7 @@ function MainScreen() {
 				text: 'Não',
 				consequence: () => {
 					setScore(27)
-					setIndicator('money', 9000)
+					setIndicator('money', 15000)
 					setCurrentQuestion('emprego1-4-1')
 				},
 			},
@@ -1378,13 +1426,13 @@ function MainScreen() {
 		},
 		{
 			id: 'oferta2',
-			questionText: 'Oferta: $25.000 por ano',
+			questionText: 'Oferta: $65.000 por ano',
 			option1: {
 				text: 'Aceitar',
 				consequence: () => {
 					setIndicator('friends', 5)
 					setIndicator('health', 5)
-					setIndicator('money', 15000)
+					setIndicator('money', 65000)
 					setCurrentQuestion('emprego2-1')
 				},
 			},
@@ -1519,7 +1567,7 @@ function MainScreen() {
 				text: 'Sim',
 				consequence: () => {
 					setScore(25)
-					setIndicator('money', 8000)
+					setIndicator('money', 18000)
 					setIndicator('friends', 4)
 					setCurrentQuestion('emprego2-3')
 				},
@@ -1528,7 +1576,7 @@ function MainScreen() {
 				text: 'Não',
 				consequence: () => {
 					setScore(25)
-					setIndicator('money', 8000)
+					setIndicator('money', 18000)
 					setIndicator('friends', -3)
 					setCurrentQuestion('emprego2-3')
 				},
@@ -1594,7 +1642,7 @@ function MainScreen() {
 				text: 'Sim',
 				consequence: () => {
 					setScore(27)
-					setIndicator('money', 9000)
+					setIndicator('money', 22000)
 					setIndicator('education', 4)
 					setCurrentQuestion(
 						doWithProbability(0.6) ? 'emprego2-4-bom' : 'emprego2-4-ruim'
@@ -1605,7 +1653,7 @@ function MainScreen() {
 				text: 'Não',
 				consequence: () => {
 					setScore(27)
-					setIndicator('money', 9000)
+					setIndicator('money', 18000)
 					setCurrentQuestion('emprego2-4-nao')
 				},
 			},
@@ -1622,11 +1670,11 @@ function MainScreen() {
 		{
 			id: 'emprego2-4-bom',
 			questionText:
-				'Seu chefe adorou a ideia! Você foi promovido como recompensa. Novo salário: 39.000 por ano',
+				'Seu chefe adorou a ideia! Você foi promovido como recompensa. Novo salário: 89.000 por ano',
 			consequence: () => {
 				setIndicator('health', 10)
 				setIndicator('friends', 3)
-				setIndicator('money', 39000)
+				setIndicator('money', 79000)
 				setCurrentQuestion('emprego2-6')
 			},
 			isAnnouncer: true,
@@ -1647,18 +1695,18 @@ function MainScreen() {
 			questionText:
 				'Você percebe um movimento no mercado que possivelmente retornará 50% de lucro sobre qualquer investimento. O que você faz?',
 			option1: {
-				text: 'Investe 10.000',
+				text: 'Investe $50.000',
 				consequence: () => {
-					setIndicator('money', -10000)
+					setIndicator('money', -50000)
 					setCurrentQuestion(
 						doWithProbability(0.6) ? 'emprego2-5-1' : 'emprego2-5-2'
 					)
 				},
 			},
 			option2: {
-				text: 'Investe 5.000',
+				text: 'Investe $20.000',
 				consequence: () => {
-					setIndicator('money', -5000)
+					setIndicator('money', -20000)
 					setCurrentQuestion(
 						doWithProbability(0.6) ? 'emprego2-5-1-1' : 'emprego2-5-2'
 					)
@@ -1677,7 +1725,7 @@ function MainScreen() {
 			questionText: 'Seu investimento deu certo, parabéns!',
 			consequence: () => {
 				setIndicator('health', 8)
-				setIndicator('money', 15000)
+				setIndicator('money', 75000)
 				setCurrentQuestion('endscreen')
 			},
 			isAnnouncer: true,
@@ -1687,7 +1735,7 @@ function MainScreen() {
 			questionText: 'Seu investimento deu certo, parabéns!',
 			consequence: () => {
 				setIndicator('health', 8)
-				setIndicator('money', 7500)
+				setIndicator('money', 30000)
 				setCurrentQuestion('endscreen')
 			},
 			isAnnouncer: true,
@@ -1727,12 +1775,12 @@ function MainScreen() {
 		{
 			id: 'emprego2-6-1',
 			questionText:
-				'Você ajuda seu amigo e em troca ele te oferece uma vaga nova de emprego! Salário: $60.000 por ano',
+				'Você ajuda seu amigo e em troca ele te oferece uma vaga nova de emprego! Salário: $112.000 por ano',
 			option1: {
 				text: 'Aceitar',
 				consequence: () => {
 					setAge(age + 2)
-					setIndicator('money', 60000)
+					setIndicator('money', 90000)
 					setIndicator('friends', 8)
 					setIndicator('health', 10)
 					setCurrentQuestion('emprego2-5')
@@ -1755,7 +1803,40 @@ function MainScreen() {
 			consequence: () => {
 				setIndicator('health', 8)
 				setCurrentQuestion('emprego1-4-1')
-				setIndicator('money', 5000)
+				setIndicator('money', 25000)
+			},
+			isAnnouncer: true,
+		},
+		{
+			id: 'lottery-win',
+			questionText: 'Você ganhou na loteria! Prêmio: $500.000',
+			option1: {
+				text: `Se aposentar agora (${score} anos)`,
+				consequence: () => {
+					setIndicator('money', 500000)
+					setIndicator('friends', 8)
+					setIndicator('health', 10)
+					setCurrentQuestion('endscreen')
+				},
+			},
+			option2: {
+				text: 'Continuar jogando',
+				consequence: () => {
+					setIndicator('money', 500000)
+					setIndicator('friends', 8)
+					setIndicator('health', 10)
+					setCurrentQuestion('emprego1-3-1')
+				},
+			},
+		},
+		{
+			id: 'lottery-fail',
+			questionText:
+				'Infelizmente, você chutou errado. Mais sorte da próxima vez...',
+			consequence: () => {
+				setIndicator('health', -5)
+				setCurrentQuestion('emprego1-3-1')
+				setIndicator('money', -20)
 			},
 			isAnnouncer: true,
 		},
@@ -1845,6 +1926,17 @@ function MainScreen() {
 					}}
 					winNegotiation={() => {
 						setCurrentQuestion('negotiationsuccess')
+					}}
+				/>
+			)
+		}
+
+		if (id === 'lottery') {
+			return (
+				<Lottery
+					moveAhead={(result) => {
+						//setCurrentQuestion('highlow')
+						setCurrentQuestion(result ? 'lottery-win' : 'lottery-fail')
 					}}
 				/>
 			)
