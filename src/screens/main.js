@@ -729,7 +729,7 @@ function MainScreen() {
 			consequence: () => {
 				setIndicator('health', -12)
 				setIndicator('friends', -6)
-				setCurrentQuestion('10')
+				setCurrentQuestion('19')
 			},
 			isAnnouncer: true,
 		},
